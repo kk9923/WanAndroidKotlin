@@ -1,4 +1,4 @@
-package com.kx.kotlin
+package com.kx.kotlin.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -16,7 +16,6 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.Toast
 import com.kx.kotlin.fragment.HomeFragment
-import com.kx.kotlin.ui.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 
