@@ -68,10 +68,9 @@ android {
         variant.outputs.all { output ->
             def outputFile = output.outputFile
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
-//                def fileName = "$(defaultConfig.)_v${defaultConfig.versionName}_(${defaultConfig.versionCode})_${releaseTime()}.apk"
-//                outputFileName = fileName
+                def fileName = "WanAndroid_v${defaultConfig.versionName}_(${defaultConfig.versionCode})_${releaseTime()}.apk"
+                outputFileName = fileName
             }
-
         }
     }
 }
