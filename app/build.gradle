@@ -17,16 +17,52 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
+    //签名
+    signingConfigs {
+        release {
+            //签名文件路径
+            storeFile file(project.relativePath("todaynews.jks"))
+            storePassword "123456"
+            keyAlias "123456"
+            keyPassword "123456"
+            v2SigningEnabled true
+            v1SigningEnabled true
+        }
+        debug {
+            //签名文件路径
+            storeFile file(project.relativePath("todaynews.jks"))
+            storePassword "123456"
+            keyAlias "123456"
+            keyPassword "123456"
+            v2SigningEnabled true
+            v1SigningEnabled true
+        }
+    }
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
+            minifyEnabled false
+            shrinkResources false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField "boolean", "LOG_DEBUG", "false"
         }
         debug {
+            signingConfig signingConfigs.debug
             buildConfigField "boolean", "LOG_DEBUG", "true"
         }
+    }
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+    dexOptions {
+        dexInProcess true
+        preDexLibraries true
+        javaMaxHeapSize "4g"
+        // incremental true
+    }
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
     android.applicationVariants.all { variant ->
         variant.outputs.all { output ->
@@ -50,7 +86,7 @@ dependencies {
     implementation 'com.youth.banner:banner:1.4.10'
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+//    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     // RxJava + RxAndroid
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
