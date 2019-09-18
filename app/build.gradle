@@ -21,7 +21,7 @@ android {
     signingConfigs {
         release {
             //签名文件路径
-            storeFile file(project.relativePath("todaynews.jks"))
+            storeFile file(project.relativePath("wanandroid.jks"))
             storePassword "123456"
             keyAlias "123456"
             keyPassword "123456"
@@ -30,7 +30,7 @@ android {
         }
         debug {
             //签名文件路径
-            storeFile file(project.relativePath("todaynews.jks"))
+            storeFile file(project.relativePath("wanandroid.jks"))
             storePassword "123456"
             keyAlias "123456"
             keyPassword "123456"
