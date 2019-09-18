@@ -1,4 +1,4 @@
-package com.cxz.wanandroid.widget.behavior
+package com.kx.kotlin.widget.behavior
 
 import android.annotation.SuppressLint
 import android.content.Context

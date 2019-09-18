@@ -1,45 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
+<LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
-            android:orientation="vertical"
+    <android.support.v7.widget.RecyclerView
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"
+            android:id="@+id/recyclerView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        <TextView
-                android:padding="20dp"
-                android:text="dffffffffffffffffdfsdfsdfdsdffsdfdsfdsffsdfdsfdsdfsfdsdfsdfsssssssssssssssssssssssssssssss范德萨的试试导粉似懂非懂是非法的胜多负少佛挡杀佛发多少的粉丝发多少"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        <TextView
-                android:padding="20dp"
-                android:text="dffffffffffffffffdfsdfsdfdsdffsdfdsfdsffsdfdsfdsdfsfdsdfsdfsssssssssssssssssssssssssssssss范德萨的试试导粉似懂非懂是非法的胜多负少佛挡杀佛发多少的粉丝发多少"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        <TextView
-                android:padding="20dp"
-                android:text="dffffffffffffffffdfsdfsdfdsdffsdfdsfdsffsdfdsfdsdfsfdsdfsdfsssssssssssssssssssssssssssssss范德萨的试试导粉似懂非懂是非法的胜多负少佛挡杀佛发多少的粉丝发多少"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        <TextView
-                android:padding="20dp"
-                android:text="dffffffffffffffffdfsdfsdfdsdffsdfdsfdsffsdfdsfdsdfsfdsdfsdfsssssssssssssssssssssssssssssss范德萨的试试导粉似懂非懂是非法的胜多负少佛挡杀佛发多少的粉丝发多少"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        <TextView
-                android:padding="20dp"
-                android:text="dffffffffffffffffdfsdfsdfdsdffsdfdsfdsffsdfdsfdsdfsfdsdfsdfsssssssssssssssssssssssssssssss范德萨的试试导粉似懂非懂是非法的胜多负少佛挡杀佛发多少的粉丝发多少"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
+            android:layout_height="match_parent"/>
 
 
-    </LinearLayout>
-
-</android.support.v4.widget.NestedScrollView>
+</LinearLayout>

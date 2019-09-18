@@ -33,6 +33,7 @@
         <!--app:type="circle" />-->
 
     <ImageView
+            android:layout_gravity="center_horizontal"
             android:src="@mipmap/ic_default_avatar"
             android:layout_width="@dimen/dp_80"
             android:layout_height="@dimen/dp_80"/>

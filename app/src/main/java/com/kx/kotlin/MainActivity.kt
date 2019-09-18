@@ -7,19 +7,23 @@ import android.os.Build
 import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
+import android.support.design.widget.NavigationView
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
 import com.kx.kotlin.fragment.HomeFragment
 import com.kx.kotlin.ui.SearchActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 
 
-class MainActivity : AppCompatActivity(),View.OnClickListener {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    val context by lazy { this }
 
     override fun onClick(v: View?) {
     }
@@ -34,48 +38,155 @@ class MainActivity : AppCompatActivity(),View.OnClickListener {
         }
         setToolBarEnableScroll(false)
         initDrawerLayout()
+        initBottomNavigation()
+        initNavView()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.container, HomeFragment.getInstance(), "home")
+        transaction.commit()
+    }
+
+    private fun initNavView() {
+        nav_view.run {
+            setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
+        }
+    }
+
+    /**
+     * NavigationView 监听
+     */
+    private val onDrawerNavigationItemSelectedListener =
+        NavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.nav_score -> {
+//                    if (isLogin) {
+//                        Intent(this@MainActivity, ScoreActivity::class.java).run {
+//                            startActivity(this)
+//                        }
+//                    } else {
+//                        showToast(resources.getString(R.string.login_tint))
+//                        goLogin()
+//                    }
+                    Toast.makeText(context, getString(R.string.nav_my_score), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_collect -> {
+//                    if (isLogin) {
+//                        goCommonActivity(Constant.Type.COLLECT_TYPE_KEY)
+//                    } else {
+//                        showToast(resources.getString(R.string.login_tint))
+//                        goLogin()
+//                    }
+                    Toast.makeText(context, getString(R.string.nav_my_collect), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_todo -> {
+//                    if (isLogin) {
+//                        Intent(this@MainActivity, TodoActivity::class.java).run {
+//                            startActivity(this)
+//                        }
+//                    } else {
+//                        showToast(resources.getString(R.string.login_tint))
+//                        goLogin()
+//                    }
+                    Toast.makeText(context, getString(R.string.nav_todo), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_night_mode -> {
+//                    if (SettingUtil.getIsNightMode()) {
+//                        SettingUtil.setIsNightMode(false)
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                    } else {
+//                        SettingUtil.setIsNightMode(true)
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                    }
+//                    window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
+//                    recreate()
+                    Toast.makeText(context, getString(R.string.nav_night_mode), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_setting -> {
+//                    Intent(this@MainActivity, SettingActivity::class.java).run {
+//                        // putExtra(Constant.TYPE_KEY, Constant.Type.SETTING_TYPE_KEY)
+//                        startActivity(this)
+//                    }
+                    Toast.makeText(context, getString(R.string.nav_setting), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_about_us -> {
+                    // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
+                    Toast.makeText(context, getString(R.string.nav_about_us), Toast.LENGTH_SHORT).show()
+                }
+                R.id.nav_logout -> {
+                    // logout()
+                    Toast.makeText(context, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
+                }
+            }
+            // drawer_layout.closeDrawer(GravityCompat.START)
+            true
+        }
+
+    private fun initBottomNavigation() {
         bottom_navigation.run {
             // 以前使用 BottomNavigationViewHelper.disableShiftMode(this) 方法来设置底部图标和字体都显示并去掉点击动画
             // 升级到 28.0.0 之后，官方重构了 BottomNavigationView ，目前可以使用 labelVisibilityMode = 1 来替代
             // BottomNavigationViewHelper.disableShiftMode(this)
             labelVisibilityMode = 1
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+            setOnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.action_home -> {
+                        toolbar.title = getString(R.string.app_name)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_knowledge_system -> {
+                        toolbar.title = getString(R.string.knowledge_system)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_wechat -> {
+                        toolbar.title = getString(R.string.wechat)
+                        setToolBarEnableScroll(true)
+                        true
+                    }
+                    R.id.action_navigation -> {
+                        toolbar.title = getString(R.string.navigation)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_project -> {
+                        toolbar.title = getString(R.string.project)
+                        setToolBarEnableScroll(true)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
         }
-
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.container, HomeFragment.getInstance(), "home")
-        transaction.commit()
     }
-private val onNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener   { item ->
+
+    private val onNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
             return@OnNavigationItemSelectedListener when (item.itemId) {
                 R.id.action_home -> {
                     toolbar.title = getString(R.string.app_name)
-                    println("action_home")
                     setToolBarEnableScroll(false)
                     true
                 }
                 R.id.action_knowledge_system -> {
                     toolbar.title = getString(R.string.knowledge_system)
-                    println("action_knowledge_system")
                     setToolBarEnableScroll(false)
                     true
                 }
                 R.id.action_wechat -> {
                     toolbar.title = getString(R.string.wechat)
-                    println("action_wechat")
                     setToolBarEnableScroll(true)
                     true
                 }
                 R.id.action_navigation -> {
                     toolbar.title = getString(R.string.navigation)
-                    println("action_navigation")
                     setToolBarEnableScroll(false)
                     true
                 }
                 R.id.action_project -> {
                     toolbar.title = getString(R.string.project)
-                    println("action_project")
                     setToolBarEnableScroll(true)
                     true
                 }
@@ -106,7 +217,7 @@ private val onNavigationItemSelectedListener =
         }
     }
 
-   private fun fullScreen(activity: Activity) {
+    private fun fullScreen(activity: Activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 //5.x开始需要把颜色设置透明，否则导航栏会呈现系统默认的浅灰色
@@ -152,12 +263,12 @@ private val onNavigationItemSelectedListener =
     /**
      * 设置TootBar的滚动模式
      */
-   private fun setToolBarEnableScroll(enable : Boolean){
+    private fun setToolBarEnableScroll(enable: Boolean) {
         val layoutParams = toolbar.layoutParams
         if (layoutParams is AppBarLayout.LayoutParams)
-            if (enable){
+            if (enable) {
                 layoutParams.scrollFlags = 5
-            }else{
+            } else {
                 layoutParams.scrollFlags = 0
             }
     }
