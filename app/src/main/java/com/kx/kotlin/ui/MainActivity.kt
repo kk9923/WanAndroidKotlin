@@ -8,21 +8,34 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
+import com.kx.kotlin.R
 import com.kx.kotlin.fragment.HomeFragment
+import com.kx.kotlin.theme.ResourceUtils
+import com.kx.kotlin.theme.ThemeEvent
+import com.kx.kotlin.theme.ThemeManager
+import com.kx.kotlin.theme.ThemeUtils
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.toolbar.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
     val context by lazy { this }
+    private var nav_night_mode: TextView? = null
+    private var nav_view_header: LinearLayout? = null
 
     override fun onClick(v: View?) {
     }
@@ -30,22 +43,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fullScreen(this)
+        setTheme(ThemeManager.getTheme())
         setContentView(R.layout.activity_main)
         toolbar.run {
-            title = getString(R.string.app_name)
             setSupportActionBar(this)
+            setToolBarEnableScroll(false)
         }
-        setToolBarEnableScroll(false)
         initDrawerLayout()
         initBottomNavigation()
         initNavView()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.container, HomeFragment.getInstance(), "home")
         transaction.commit()
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     private fun initNavView() {
         nav_view.run {
+            nav_night_mode = MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_night_mode)) as TextView
+            nav_view_header =  getHeaderView(0).findViewById(R.id.nav_view_header)
             setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
         }
     }
@@ -97,6 +115,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    }
 //                    window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
 //                    recreate()
+                    ThemeManager.changeTheme(context)
+                    ThemeUtils.startThemeChangeRevealAnimation(context, nav_night_mode)
                     Toast.makeText(context, getString(R.string.nav_night_mode), Toast.LENGTH_SHORT).show()
                 }
                 R.id.nav_setting -> {
@@ -270,6 +290,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 layoutParams.scrollFlags = 0
             }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAppThemeChange(themeEvent: ThemeEvent) {
+        bottom_navigation.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.common_bg))
+        nav_view.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.common_bg))
+        nav_view_header?.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.nav_header_bg))
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
     }
 }
 

@@ -17,26 +17,14 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 
-    <style name="AppTheme.Day">
-        <item name="android:textSize">@dimen/sp16</item>
-        <item name="common_color">@color/black</item>
+    <style name="AppTheme.Day" parent="AppTheme">
         <item name="common_bg">@color/white</item>
-        <item name="channel_color">@color/black</item>
-        <item name="channel_bg">@color/white</item>
-        <item name="channel_my_color">@color/black</item>
-        <item name="news_title">@color/black</item>
-        <item name="news_bg">@color/white</item>
+        <item name="nav_header_bg">@color/colorPrimary</item>
     </style>
 
-    <style name="AppTheme.Night">
-        <item name="android:textSize">@dimen/sp16</item>
-        <item name="common_color">@color/textColorPrimary</item>
-        <item name="channel_color">@color/tip</item>
+    <style name="AppTheme.Night" parent="AppTheme">
         <item name="common_bg">#424242</item>
-        <item name="channel_bg">#424242</item>
-        <item name="channel_my_color">@color/tip</item>
-        <item name="news_title">@color/tip</item>
-        <item name="news_bg">@color/textColorPrimary</item>
+        <item name="nav_header_bg">#424242</item>
     </style>
 
 </resources>

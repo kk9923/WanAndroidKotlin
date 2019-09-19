@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom"
-                android:background="@color/viewBackground"
+                android:background="?attr/common_bg"
                 app:elevation="@dimen/dp_16"
                 app:layout_behavior="@string/BottomNavigationBehavior"
                 app:menu="@menu/bottom_navigation_main"/>

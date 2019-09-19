@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.kx.kotlin.R
 import com.kx.kotlin.bean.Article
+import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.util.ImageLoader
 
 class HomeListAdapter(private val context: Context?)
@@ -16,6 +17,7 @@ class HomeListAdapter(private val context: Context?)
     override fun convert(helper: BaseViewHolder?, item: Article?) {
         item ?: return
         helper ?: return
+        helper.setBackgroundColor(R.id.rl_bg, ResourceUtils.resolveData(mContext, R.attr.common_bg))
         helper.setText(R.id.tv_article_title, Html.fromHtml(item.title))
             .setText(R.id.tv_article_author, item.author)
             .setText(R.id.tv_article_date, item.niceDate)

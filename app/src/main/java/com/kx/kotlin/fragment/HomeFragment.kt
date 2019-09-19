@@ -13,6 +13,7 @@ import com.kx.kotlin.bean.ArticleResponseBody
 import com.kx.kotlin.bean.Banner
 import com.kx.kotlin.bean.HttpResult
 import com.kx.kotlin.http.RetrofitHelper
+import com.kx.kotlin.theme.ThemeEvent
 import com.kx.kotlin.widget.GlideImageLoader
 import com.kx.kotlin.widget.SpaceItemDecoration
 import com.youth.banner.BannerConfig
@@ -21,6 +22,9 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 
 class HomeFragment : Fragment() {
@@ -36,6 +40,13 @@ class HomeFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         rootView = inflater.inflate(R.layout.fragment_home, container, false)
         return rootView
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     @SuppressLint("CheckResult")
@@ -92,7 +103,17 @@ class HomeFragment : Fragment() {
         }
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this)
+        }
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onAppThemeChange(themeEvent: ThemeEvent) {
+        homeListAdapter?.notifyDataSetChanged()
+    }
 
     override fun onStart() {
         super.onStart()
