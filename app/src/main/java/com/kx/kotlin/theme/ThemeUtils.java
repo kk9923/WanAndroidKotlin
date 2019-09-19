@@ -58,7 +58,7 @@ public class ThemeUtils {
         }
     }
 
-    public static Bitmap takeSnapshot(View view) {
+    private static Bitmap takeSnapshot(View view) {
         view.setDrawingCacheEnabled(true);
         view.setDrawingCacheQuality(DRAWING_CACHE_QUALITY_AUTO);
         Bitmap drawingCache = view.getDrawingCache();
@@ -76,7 +76,7 @@ public class ThemeUtils {
                 context.getResources().getDisplayMetrics());
     }
 
-    public static void postThemeChangeEvent() {
+    private static void postThemeChangeEvent() {
         EventBus.getDefault().post(new ThemeEvent(ThemeManager.valueOf()));
     }
 
