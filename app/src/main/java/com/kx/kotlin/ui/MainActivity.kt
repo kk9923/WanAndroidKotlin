@@ -132,7 +132,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 }
                 R.id.nav_logout -> {
                     // logout()
-                    Toast.makeText(context, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@MainActivity, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
                 }
             }
             // drawer_layout.closeDrawer(GravityCompat.START)

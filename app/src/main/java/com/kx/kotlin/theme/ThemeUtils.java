@@ -15,6 +15,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import org.greenrobot.eventbus.EventBus;
 
+import static android.view.View.DRAWING_CACHE_QUALITY_AUTO;
+
 
 public class ThemeUtils {
 
@@ -58,7 +60,7 @@ public class ThemeUtils {
 
     public static Bitmap takeSnapshot(View view) {
         view.setDrawingCacheEnabled(true);
-        view.setDrawingCacheQuality(0);
+        view.setDrawingCacheQuality(DRAWING_CACHE_QUALITY_AUTO);
         Bitmap drawingCache = view.getDrawingCache();
         if (drawingCache == null) {
             return null;
