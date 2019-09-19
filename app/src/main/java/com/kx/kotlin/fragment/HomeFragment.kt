@@ -2,34 +2,35 @@ package com.kx.kotlin.fragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.HomeListAdapter
 import com.kx.kotlin.bean.ArticleResponseBody
 import com.kx.kotlin.bean.Banner
+import com.kx.kotlin.bean.HomeData
 import com.kx.kotlin.bean.HttpResult
 import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.theme.ThemeEvent
+import com.kx.kotlin.util.RxUtils
 import com.kx.kotlin.widget.GlideImageLoader
 import com.kx.kotlin.widget.SpaceItemDecoration
 import com.youth.banner.BannerConfig
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Consumer
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_home.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : BaseFragment() {
 
-    var homeListAdapter :HomeListAdapter? = null
+
+    var homeListAdapter: HomeListAdapter? = null
     private var bannerView: com.youth.banner.Banner? = null
 
     companion object {
@@ -58,15 +59,23 @@ class HomeFragment : Fragment() {
             itemAnimator = DefaultItemAnimator()
             recyclerViewItemDecoration?.let { addItemDecoration(it) }
         }
-        val headerView  = LayoutInflater.from(activity).inflate(R.layout.home_banner,null)
+        val headerView = LayoutInflater.from(activity).inflate(R.layout.home_banner, null)
         bannerView = headerView.findViewById(R.id.banner)
         homeListAdapter?.addHeaderView(headerView)
-        RetrofitHelper.service.getBanners().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Consumer<HttpResult<List<Banner>>> {
-                override fun accept(result: HttpResult<List<Banner>>) {
+
+        val banner = getBanner()
+        val articles = getArticles(0)
+
+        addDisposable(Observable.zip(banner, articles,
+            BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
+                val homeData = HomeData(t1.data, t2.data.datas)
+                homeData
+            })
+            .subscribe({ homeData ->
+                    val banners = homeData.banners
                     val images = arrayListOf<String>()
                     val titles = arrayListOf<String>()
-                    Observable.fromIterable(result.data)
+                    Observable.fromIterable(banners)
                         .subscribe { item ->
                             images.add(item.imagePath)
                             titles.add(item.title)
@@ -78,23 +87,22 @@ class HomeFragment : Fragment() {
                     bannerView?.setDelayTime(3000)
                     bannerView?.setIndicatorGravity(BannerConfig.RIGHT)
                     bannerView?.start()
-                }
-                }, object : Consumer<Throwable> {
-                    override fun accept(t: Throwable?) {
+                    homeListAdapter?.setNewData(homeData.articles)
+                }, {
+                  it ->
+                    run {
+                        Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
                     }
                 }
-            )
-        RetrofitHelper.service.getArticles(0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : Consumer<HttpResult<ArticleResponseBody>> {
-                override fun accept(result: HttpResult<ArticleResponseBody>) {
-                    val datas = result.data.datas
-                    homeListAdapter?.setNewData(datas)
-                }
-                }, object : Consumer<Throwable> {
-                    override fun accept(t: Throwable?) {
-                    }
-                }
-            )
+            ))
+    }
+
+    private fun getBanner(): Observable<HttpResult<List<Banner>>> {
+        return RetrofitHelper.service.getBanners().compose(RxUtils.rxSchedulerHelper())
+    }
+
+    private fun getArticles(pageNum: Int): Observable<HttpResult<ArticleResponseBody>> {
+        return RetrofitHelper.service.getArticles(pageNum).compose(RxUtils.rxSchedulerHelper())
     }
 
     private val recyclerViewItemDecoration by lazy {
@@ -108,6 +116,7 @@ class HomeFragment : Fragment() {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }
+        clearDispose()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

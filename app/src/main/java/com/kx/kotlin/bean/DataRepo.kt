@@ -29,6 +29,11 @@ data class ArticleResponseBody(
     val total: Int
 )
 
+data class HomeData(
+    val banners: List<Banner> ,
+    val articles: List<Article>
+)
+
 //
 //文章
 data class Article(
