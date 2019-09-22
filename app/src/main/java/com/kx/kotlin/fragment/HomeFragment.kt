@@ -3,6 +3,7 @@ package com.kx.kotlin.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
@@ -23,6 +24,10 @@ import com.kx.kotlin.ui.ArticlesDetailActivity
 import com.kx.kotlin.util.RxUtils
 import com.kx.kotlin.widget.GlideImageLoader
 import com.kx.kotlin.widget.SpaceItemDecoration
+import com.scwang.smartrefresh.layout.SmartRefreshLayout
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.youth.banner.BannerConfig
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -36,6 +41,8 @@ class HomeFragment : BaseFragment() {
 
 
     private var bannerView: com.youth.banner.Banner? = null
+
+    private var pageNum: Int = 0
 
     companion object {
         fun getInstance(): HomeFragment = HomeFragment()
@@ -60,7 +67,7 @@ class HomeFragment : BaseFragment() {
         recyclerView.run {
             adapter = homeListAdapter
             itemAnimator = DefaultItemAnimator()
-            recyclerViewItemDecoration?.let { addItemDecoration(it) }
+            //recyclerViewItemDecoration?.let { addItemDecoration(it) }
         }
         val headerView = LayoutInflater.from(activity).inflate(R.layout.home_banner, null)
         bannerView = headerView.findViewById(R.id.banner)
@@ -68,25 +75,77 @@ class HomeFragment : BaseFragment() {
         homeListAdapter.run {
             addHeaderView(headerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
-        }
+            setOnLoadMoreListener(object : BaseQuickAdapter.RequestLoadMoreListener {
+                override fun onLoadMoreRequested() {
+                    addDisposable(getArticles(pageNum)
+                            .subscribe({
+                                refreshLayout.getLayout().postDelayed(object : Runnable {
+                                    override fun run() {
+                                        val datas = it.data.datas
+                                        homeListAdapter.addData(datas)
+                                        pageNum++
+                                        loadMoreComplete()
+                                    }
+                                }, 1000)
+                            }, { it ->
+                                run {
+                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+                                }
+                            })
 
+
+                    )
+                }
+
+            }, recyclerView)
+        }
+        refreshLayout.run {
+            setEnableLoadMore(false)
+            setOnRefreshListener(object : OnRefreshListener {
+                override fun onRefresh(refreshLayout: RefreshLayout) {
+                    finishRefresh(true)
+                }
+            })
+//            setOnLoadMoreListener(object : OnLoadMoreListener {
+//                override fun onLoadMore(refreshLayout: RefreshLayout) {
+//                    addDisposable(getArticles(pageNum)
+//                            .subscribe({
+//                                refreshLayout.getLayout().postDelayed(object :Runnable{
+//                                    override fun run() {
+//                                        finishLoadMore()
+//                                        val datas = it.data.datas
+//                                        homeListAdapter.addData(datas)
+//                                        pageNum++
+//
+//                                    }
+//                                }, 1000)
+//                            }, { it ->
+//                                run {
+//                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+//                                }
+//                            }
+//                            )
+//                    )
+//                }
+//            })
+        }
         val banner = getBanner()
-        val articles = getArticles(0)
+        val articles = getArticles(pageNum)
 
         addDisposable(Observable.zip(banner, articles,
-            BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
-                val homeData = HomeData(t1.data, t2.data.datas)
-                homeData
-            })
-            .subscribe({ homeData ->
+                BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
+                    val homeData = HomeData(t1.data, t2.data.datas)
+                    homeData
+                })
+                .subscribe({ homeData ->
                     val banners = homeData.banners
                     val images = arrayListOf<String>()
                     val titles = arrayListOf<String>()
                     Observable.fromIterable(banners)
-                        .subscribe { item ->
-                            images.add(item.imagePath)
-                            titles.add(item.title)
-                        }
+                            .subscribe { item ->
+                                images.add(item.imagePath)
+                                titles.add(item.title)
+                            }
                     bannerView?.setImageLoader(GlideImageLoader())
                     bannerView?.setImages(images)
                     bannerView?.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
@@ -94,15 +153,16 @@ class HomeFragment : BaseFragment() {
                     bannerView?.setDelayTime(3000)
                     bannerView?.setIndicatorGravity(BannerConfig.RIGHT)
                     bannerView?.start()
-                    homeListAdapter?.setNewData(homeData.articles)
-                }, {
-                  it ->
+                    homeListAdapter.setNewData(homeData.articles)
+                    pageNum++
+                }, { it ->
                     run {
                         Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
                     }
                 }
-            ))
+                ))
     }
+
 
     private fun getBanner(): Observable<HttpResult<List<Banner>>> {
         return RetrofitHelper.service.getBanners().compose(RxUtils.rxSchedulerHelper())
@@ -121,7 +181,7 @@ class HomeFragment : BaseFragment() {
         HomeListAdapter(activity)
     }
 
-    private val onItemClickListener = object :OnItemClickListener{
+    private val onItemClickListener = object : OnItemClickListener {
         override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
             val itemData = homeListAdapter.data[position]
             val intent = Intent(activity, ArticlesDetailActivity::class.java)

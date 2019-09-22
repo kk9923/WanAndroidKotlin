@@ -85,7 +85,7 @@ dependencies {
     implementation 'com.youth.banner:banner:1.4.10'
     // glide
     implementation 'com.github.bumptech.glide:glide:4.8.0'
-//    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.8.0'
     // RxJava + RxAndroid
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.10'
@@ -94,5 +94,8 @@ dependencies {
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.42'
+    // EventBus
     implementation 'org.greenrobot:eventbus:3.1.1'
+    // SmartRefreshLayout 刷新框架
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0'
 }
