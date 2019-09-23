@@ -33,6 +33,8 @@
     <color name="while_most_color">#e4e4e4</color>
     <color name="title_black">#222222</color>
     <color name="grey_search">#FF999999</color>
+    <color name="grey_divider">#E5E5E5</color>
+    <color name="grey">#cccccc</color>
 
     <color name="White">#FFFFFF</color>
     <color name="Black">#000000</color>

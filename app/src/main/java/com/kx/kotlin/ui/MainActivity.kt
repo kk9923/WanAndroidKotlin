@@ -63,8 +63,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     private fun initNavView() {
         nav_view.run {
             nav_night_mode = MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_night_mode)) as TextView
-            nav_view_header =  getHeaderView(0).findViewById(R.id.nav_view_header)
+            nav_view_header = getHeaderView(0).findViewById(R.id.nav_view_header)
+            nav_view_header?.setOnClickListener {
+                goLogin()
+            }
             setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
+        }
+    }
+
+    private fun goLogin() {
+        Intent(this@MainActivity, LoginActivity::class.java).run {
+            startActivity(this)
         }
     }
 
@@ -72,9 +81,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
      * NavigationView 监听
      */
     private val onDrawerNavigationItemSelectedListener =
-        NavigationView.OnNavigationItemSelectedListener { item ->
-            when (item.itemId) {
-                R.id.nav_score -> {
+            NavigationView.OnNavigationItemSelectedListener { item ->
+                when (item.itemId) {
+                    R.id.nav_score -> {
 //                    if (isLogin) {
 //                        Intent(this@MainActivity, ScoreActivity::class.java).run {
 //                            startActivity(this)
@@ -83,18 +92,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                    Toast.makeText(context, getString(R.string.nav_my_score), Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_collect -> {
+                        Toast.makeText(context, getString(R.string.nav_my_score), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_collect -> {
 //                    if (isLogin) {
 //                        goCommonActivity(Constant.Type.COLLECT_TYPE_KEY)
 //                    } else {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                    Toast.makeText(context, getString(R.string.nav_my_collect), Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_todo -> {
+                        Toast.makeText(context, getString(R.string.nav_my_collect), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_todo -> {
 //                    if (isLogin) {
 //                        Intent(this@MainActivity, TodoActivity::class.java).run {
 //                            startActivity(this)
@@ -103,9 +112,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                    Toast.makeText(context, getString(R.string.nav_todo), Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_night_mode -> {
+                        Toast.makeText(context, getString(R.string.nav_todo), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_night_mode -> {
 //                    if (SettingUtil.getIsNightMode()) {
 //                        SettingUtil.setIsNightMode(false)
 //                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
@@ -115,29 +124,29 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    }
 //                    window.setWindowAnimations(R.style.WindowAnimationFadeInOut)
 //                    recreate()
-                    ThemeManager.changeTheme(context)
-                    ThemeUtils.startThemeChangeRevealAnimation(context, nav_night_mode)
-                    Toast.makeText(context, getString(R.string.nav_night_mode), Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_setting -> {
+                        ThemeManager.changeTheme(context)
+                        ThemeUtils.startThemeChangeRevealAnimation(context, nav_night_mode)
+                        Toast.makeText(context, getString(R.string.nav_night_mode), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_setting -> {
 //                    Intent(this@MainActivity, SettingActivity::class.java).run {
 //                        // putExtra(Constant.TYPE_KEY, Constant.Type.SETTING_TYPE_KEY)
 //                        startActivity(this)
 //                    }
-                    Toast.makeText(context, getString(R.string.nav_setting), Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, getString(R.string.nav_setting), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_about_us -> {
+                        // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
+                        Toast.makeText(context, getString(R.string.nav_about_us), Toast.LENGTH_SHORT).show()
+                    }
+                    R.id.nav_logout -> {
+                        // logout()
+                        Toast.makeText(this@MainActivity, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
+                    }
                 }
-                R.id.nav_about_us -> {
-                    // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
-                    Toast.makeText(context, getString(R.string.nav_about_us), Toast.LENGTH_SHORT).show()
-                }
-                R.id.nav_logout -> {
-                    // logout()
-                    Toast.makeText(this@MainActivity, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
-                }
+                // drawer_layout.closeDrawer(GravityCompat.START)
+                true
             }
-            // drawer_layout.closeDrawer(GravityCompat.START)
-            true
-        }
 
     private fun initBottomNavigation() {
         bottom_navigation.run {
@@ -182,39 +191,39 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private val onNavigationItemSelectedListener =
-        BottomNavigationView.OnNavigationItemSelectedListener { item ->
-            return@OnNavigationItemSelectedListener when (item.itemId) {
-                R.id.action_home -> {
-                    toolbar.title = getString(R.string.app_name)
-                    setToolBarEnableScroll(false)
-                    true
-                }
-                R.id.action_knowledge_system -> {
-                    toolbar.title = getString(R.string.knowledge_system)
-                    setToolBarEnableScroll(false)
-                    true
-                }
-                R.id.action_wechat -> {
-                    toolbar.title = getString(R.string.wechat)
-                    setToolBarEnableScroll(true)
-                    true
-                }
-                R.id.action_navigation -> {
-                    toolbar.title = getString(R.string.navigation)
-                    setToolBarEnableScroll(false)
-                    true
-                }
-                R.id.action_project -> {
-                    toolbar.title = getString(R.string.project)
-                    setToolBarEnableScroll(true)
-                    true
-                }
-                else -> {
-                    false
-                }
+            BottomNavigationView.OnNavigationItemSelectedListener { item ->
+                return@OnNavigationItemSelectedListener when (item.itemId) {
+                    R.id.action_home -> {
+                        toolbar.title = getString(R.string.app_name)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_knowledge_system -> {
+                        toolbar.title = getString(R.string.knowledge_system)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_wechat -> {
+                        toolbar.title = getString(R.string.wechat)
+                        setToolBarEnableScroll(true)
+                        true
+                    }
+                    R.id.action_navigation -> {
+                        toolbar.title = getString(R.string.navigation)
+                        setToolBarEnableScroll(false)
+                        true
+                    }
+                    R.id.action_project -> {
+                        toolbar.title = getString(R.string.project)
+                        setToolBarEnableScroll(true)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
 
+                }
             }
-        }
 
     private fun initDrawerLayout() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
@@ -225,11 +234,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //        }
         drawer_layout.run {
             val toggle = ActionBarDrawerToggle(
-                this@MainActivity,
-                this,
-                toolbar
-                , R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close
+                    this@MainActivity,
+                    this,
+                    toolbar
+                    , R.string.navigation_drawer_open,
+                    R.string.navigation_drawer_close
             )
             addDrawerListener(toggle)
             toggle.syncState()

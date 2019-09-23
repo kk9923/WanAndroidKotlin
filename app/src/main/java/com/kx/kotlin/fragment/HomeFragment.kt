@@ -77,33 +77,22 @@ class HomeFragment : BaseFragment() {
         refreshLayout.run {
             setOnRefreshListener(object : OnRefreshListener {
                 override fun onRefresh(refreshLayout: RefreshLayout) {
-                    finishRefresh(true)
+                    onRefresh()
                 }
             })
             setOnLoadMoreListener(object : OnLoadMoreListener {
                 override fun onLoadMore(refreshLayout: RefreshLayout) {
-                    //  加载更多的时候禁调滑动
-                    //  直接设置接口数据时,当界面刷新完毕后,会在屏幕底部显示加载完成的文字
-                    recyclerView.stopScroll()
-                    addDisposable(getArticles(pageNum)
-                            .subscribe({
-                                val datas = it.data.datas
-                                homeListAdapter.addData(datas)
-                                pageNum++
-                                finishLoadMore()
-                            }, { it ->
-                                run {
-                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                            )
-                    )
+                    loadMore()
                 }
             })
         }
+        refreshLayout.autoRefresh()
+    }
+
+    fun onRefresh() {
+        pageNum = 0
         val banner = getBanner()
         val articles = getArticles(pageNum)
-
         addDisposable(Observable.zip(banner, articles,
                 BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
                     val homeData = HomeData(t1.data, t2.data.datas)
@@ -127,12 +116,32 @@ class HomeFragment : BaseFragment() {
                     bannerView?.start()
                     homeListAdapter.setNewData(homeData.articles)
                     pageNum++
+                    refreshLayout.finishRefresh(true)
                 }, { it ->
                     run {
                         Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
                     }
                 }
                 ))
+    }
+
+    fun loadMore(){
+        //  加载更多的时候禁调滑动
+        //  直接设置接口数据时,当界面刷新完毕后,会在屏幕底部显示加载完成的文字
+        recyclerView.stopScroll()
+        addDisposable(getArticles(pageNum)
+                .subscribe({
+                    val datas = it.data.datas
+                    homeListAdapter.addData(datas)
+                    pageNum++
+                    refreshLayout.finishLoadMore()
+                }, { it ->
+                    run {
+                        Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+                    }
+                }
+                )
+        )
     }
 
 
