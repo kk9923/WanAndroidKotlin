@@ -3,7 +3,6 @@ package com.kx.kotlin.fragment
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.support.v4.content.ContextCompat.startActivity
 import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
@@ -24,7 +23,6 @@ import com.kx.kotlin.ui.ArticlesDetailActivity
 import com.kx.kotlin.util.RxUtils
 import com.kx.kotlin.widget.GlideImageLoader
 import com.kx.kotlin.widget.SpaceItemDecoration
-import com.scwang.smartrefresh.layout.SmartRefreshLayout
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener
@@ -67,7 +65,7 @@ class HomeFragment : BaseFragment() {
         recyclerView.run {
             adapter = homeListAdapter
             itemAnimator = DefaultItemAnimator()
-            //recyclerViewItemDecoration?.let { addItemDecoration(it) }
+            recyclerViewItemDecoration?.let { addItemDecoration(it) }
         }
         val headerView = LayoutInflater.from(activity).inflate(R.layout.home_banner, null)
         bannerView = headerView.findViewById(R.id.banner)
@@ -75,59 +73,33 @@ class HomeFragment : BaseFragment() {
         homeListAdapter.run {
             addHeaderView(headerView)
             onItemClickListener = this@HomeFragment.onItemClickListener
-            setOnLoadMoreListener(object : BaseQuickAdapter.RequestLoadMoreListener {
-                override fun onLoadMoreRequested() {
-                    addDisposable(getArticles(pageNum)
-                            .subscribe({
-                                refreshLayout.getLayout().postDelayed(object : Runnable {
-                                    override fun run() {
-                                        val datas = it.data.datas
-                                        homeListAdapter.addData(datas)
-                                        pageNum++
-                                        loadMoreComplete()
-                                    }
-                                }, 1000)
-                            }, { it ->
-                                run {
-                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
-                                }
-                            })
-
-
-                    )
-                }
-
-            }, recyclerView)
         }
         refreshLayout.run {
-            setEnableLoadMore(false)
             setOnRefreshListener(object : OnRefreshListener {
                 override fun onRefresh(refreshLayout: RefreshLayout) {
                     finishRefresh(true)
                 }
             })
-//            setOnLoadMoreListener(object : OnLoadMoreListener {
-//                override fun onLoadMore(refreshLayout: RefreshLayout) {
-//                    addDisposable(getArticles(pageNum)
-//                            .subscribe({
-//                                refreshLayout.getLayout().postDelayed(object :Runnable{
-//                                    override fun run() {
-//                                        finishLoadMore()
-//                                        val datas = it.data.datas
-//                                        homeListAdapter.addData(datas)
-//                                        pageNum++
-//
-//                                    }
-//                                }, 1000)
-//                            }, { it ->
-//                                run {
-//                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
-//                                }
-//                            }
-//                            )
-//                    )
-//                }
-//            })
+            setOnLoadMoreListener(object : OnLoadMoreListener {
+                override fun onLoadMore(refreshLayout: RefreshLayout) {
+                    //  加载更多的时候禁调滑动
+                    //  直接设置接口数据时,当界面刷新完毕后,会在屏幕底部显示加载完成的文字
+                    recyclerView.stopScroll()
+                    addDisposable(getArticles(pageNum)
+                            .subscribe({
+                                val datas = it.data.datas
+                                homeListAdapter.addData(datas)
+                                pageNum++
+                                finishLoadMore()
+                            }, { it ->
+                                run {
+                                    Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            )
+                    )
+                }
+            })
         }
         val banner = getBanner()
         val articles = getArticles(pageNum)

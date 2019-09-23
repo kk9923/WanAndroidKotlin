@@ -7,6 +7,7 @@
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         app:srlAccentColor="@android:color/white"
+        app:srlPrimaryColor="@color/colorPrimary"
         app:srlEnablePreviewInEditMode="true"
         app:srlEnableScrollContentWhenLoaded="true"
         app:srlEnableFooterFollowWhenLoadFinished="true"
@@ -24,10 +25,10 @@
             android:layout_height="match_parent"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
-        <!--<com.scwang.smartrefresh.layout.footer.ClassicsFooter-->
-            <!--app:srlClassicsSpinnerStyle="Translate"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="43dp"/>-->
+        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+            app:srlClassicsSpinnerStyle="Translate"
+            android:layout_width="match_parent"
+            android:layout_height="43dp"/>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
