@@ -321,7 +321,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         var builder = AlertDialog.Builder(this)
         builder.setMessage(getString(R.string.confirm_logout))
         builder.setPositiveButton("确定") { _, _ ->
-            RetrofitHelper.service.logout().compose(RxUtils.rxSchedulerHelper())
+            RetrofitHelper.service.logout().compose(RxUtils.ioMain())
                 .subscribe({
                     doAsync {
                         // CookieManager().clearAllCookies()

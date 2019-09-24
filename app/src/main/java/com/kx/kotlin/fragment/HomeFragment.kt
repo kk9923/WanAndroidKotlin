@@ -147,11 +147,11 @@ class HomeFragment : BaseFragment() {
 
 
     private fun getBanner(): Observable<HttpResult<List<Banner>>> {
-        return RetrofitHelper.service.getBanners().compose(RxUtils.rxSchedulerHelper())
+        return RetrofitHelper.service.getBanners().compose(RxUtils.ioMain())
     }
 
     private fun getArticles(pageNum: Int): Observable<HttpResult<ArticleResponseBody>> {
-        return RetrofitHelper.service.getArticles(pageNum).compose(RxUtils.rxSchedulerHelper())
+        return RetrofitHelper.service.getArticles(pageNum).compose(RxUtils.ioMain())
     }
 
     private val recyclerViewItemDecoration by lazy {

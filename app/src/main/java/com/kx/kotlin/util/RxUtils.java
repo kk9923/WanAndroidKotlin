@@ -28,7 +28,7 @@ public class RxUtils {
      * @param <T> 指定的泛型类型
      * @return ObservableTransformer
      */
-    public static <T> ObservableTransformer<T, T> rxSchedulerHelper() {
+    public static <T> ObservableTransformer<T, T> ioMain() {
         return observable -> observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }

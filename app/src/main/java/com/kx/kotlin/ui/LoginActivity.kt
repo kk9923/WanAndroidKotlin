@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.view.View
 import com.kx.kotlin.R
 import com.kx.kotlin.base.BaseActivity
+import com.kx.kotlin.base.BaseObserver
 import com.kx.kotlin.bean.BaseResponse
+import com.kx.kotlin.bean.LoginData
 import com.kx.kotlin.event.LoginEvent
 import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.http.ApiException
 import com.kx.kotlin.http.ErrorStatus
 import com.kx.kotlin.http.ExceptionHandle
 import com.kx.kotlin.http.RetrofitHelper
+import com.kx.kotlin.util.RxUtils
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -48,17 +51,20 @@ class LoginActivity : BaseActivity() {
         if (validate()) {
             addDisposable(
                 RetrofitHelper.service.login(et_username.text.toString(), et_password.text.toString())
-                   .compose(ioMain())
-                    .subscribe({
-                        username = it.username
-                        password = it.password
-                        token = it.token
-                        isLogin = true
-                        EventBus.getDefault().post(LoginEvent(true))
-                        finish()
-                    }, { it ->
-                        showToast("${it.message}")
-                    })
+                        .compose(RxUtils.ioMain())
+                        .subscribeWith(object : BaseObserver<LoginData>() {
+                            override fun onError(errorMsg: String) {
+                                showToast(errorMsg)
+                            }
+                            override fun onSuccess(result: LoginData?) {
+                                username = result!!.username
+                                password = result.password
+                                token = result.token
+                                isLogin = true
+                                EventBus.getDefault().post(LoginEvent(true))
+                                finish()
+                            }
+                        })
             )
         }
     }

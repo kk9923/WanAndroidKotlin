@@ -53,7 +53,7 @@ class RegisterActivity : BaseActivity() {
             val repassword: String = et_repassword.text.toString()
             addDisposable(
                 RetrofitHelper.service.register(username, password, repassword)
-                    .compose(RxUtils.rxSchedulerHelper())
+                    .compose(RxUtils.ioMain())
                     .subscribe({
                         var data = it.data
                         EventBus.getDefault().post(LoginEvent(true))
