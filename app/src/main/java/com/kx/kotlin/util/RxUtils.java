@@ -1,9 +1,14 @@
 package com.kx.kotlin.util;
 
+import com.kx.kotlin.WanAndroidApplication;
+import com.kx.kotlin.bean.BaseResponse;
+import com.kx.kotlin.http.ErrorStatus;
+import com.kx.kotlin.http.OtherException;
 import io.reactivex.FlowableTransformer;
 import io.reactivex.Observable;
 import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 public class RxUtils {
@@ -27,24 +32,24 @@ public class RxUtils {
         return observable -> observable.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
     }
-//
-//    /**
-//     * 统一返回结果处理
-//     * @param <T> 指定的泛型类型
-//     * @return ObservableTransformer
-//     */
-//    public static <T> ObservableTransformer<BaseResponse<T>, T> handleResult() {
-//        return httpResponseObservable ->
-//                httpResponseObservable.flatMap((Function<BaseResponse<T>, Observable<T>>) baseResponse -> {
-//            if(baseResponse.getErrorCode() == BaseResponse.SUCCESS
-//                    && baseResponse.getData() != null
-//                    && CommonUtils.isNetworkConnected()) {
-//                return createData(baseResponse.getData());
-//            } else {
-//                return Observable.error(new OtherException());
-//            }
-//        });
-//    }
+
+    /**
+     * 统一返回结果处理
+     * @param <T> 指定的泛型类型
+     * @return ObservableTransformer
+     */
+    public static <T> ObservableTransformer<BaseResponse<T>, T> handleResult() {
+        return httpResponseObservable ->
+                httpResponseObservable.flatMap((Function<BaseResponse<T>, Observable<T>>) baseResponse -> {
+            if(baseResponse.getErrorCode() == ErrorStatus.SUCCESS
+                    && baseResponse.getData()!= null
+                    && NetWorkUtil.isNetworkAvailable(WanAndroidApplication.instance)) {
+                return createData(baseResponse.getData());
+            } else {
+                return Observable.error(new OtherException());
+            }
+        });
+    }
 //
 //    /**
 //     * 退出登录返回结果处理

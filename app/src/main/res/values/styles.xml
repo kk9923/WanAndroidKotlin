@@ -20,11 +20,13 @@
     <style name="AppTheme.Day" parent="AppTheme">
         <item name="common_bg">@color/white</item>
         <item name="nav_header_bg">@color/colorPrimary</item>
+        <item name="nav_mode_title">@string/nav_night_mode</item>
     </style>
 
     <style name="AppTheme.Night" parent="AppTheme">
         <item name="common_bg">#424242</item>
         <item name="nav_header_bg">#424242</item>
+        <item name="nav_mode_title">@string/nav_day_mode</item>
     </style>
 
     <style name="style_circle_edit">

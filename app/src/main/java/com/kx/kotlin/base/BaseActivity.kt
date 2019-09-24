@@ -1,11 +1,28 @@
 package com.kx.kotlin.base
 
 import android.support.v7.app.AppCompatActivity
+import com.kx.kotlin.constant.Constant
+import com.kx.kotlin.util.SPUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 open class BaseActivity : AppCompatActivity() {
 
+    protected var isLogin: Boolean by SPUtils(Constant.LOGIN_KEY, false)
+    /**
+     * local username
+     */
+    protected var username: String by SPUtils(Constant.USERNAME_KEY, "")
+
+    /**
+     * local password
+     */
+    protected var password: String by SPUtils(Constant.PASSWORD_KEY, "")
+
+    /**
+     * token
+     */
+    protected var token: String by SPUtils(Constant.TOKEN_KEY, "")
 
     var mCompositeDisposable: CompositeDisposable? = null
 

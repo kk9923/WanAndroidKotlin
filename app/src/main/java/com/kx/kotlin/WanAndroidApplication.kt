@@ -1,18 +1,29 @@
 package com.kx.kotlin
 
 import android.app.Application
+import android.content.Context
 import com.kx.kotlin.theme.ThemeManager
+import kotlin.properties.Delegates
 
 /**
  *  Created by admin on 2019/9/18.
  */
 class WanAndroidApplication : Application() {
 
-    val mContext by lazy {
-        this.applicationContext
+    companion object {
+        private val TAG = "App"
+
+        var context: Context by Delegates.notNull()
+            private set
+
+        lateinit var instance: Application
+
     }
+
     override fun onCreate() {
         super.onCreate()
-        ThemeManager.init(mContext)
+        instance = this
+        context = applicationContext
+        ThemeManager.init(context)
     }
 }

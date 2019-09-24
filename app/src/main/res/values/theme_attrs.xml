@@ -2,4 +2,5 @@
 <resources>
     <attr name="common_bg" format="color"/>
     <attr name="nav_header_bg" format="color"/>
+    <attr name="nav_mode_title" format="string"/>
 </resources>

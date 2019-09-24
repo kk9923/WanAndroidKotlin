@@ -1,9 +1,6 @@
 package com.kx.kotlin.http
 
-import com.kx.kotlin.bean.ArticleResponseBody
-import com.kx.kotlin.bean.Banner
-import com.kx.kotlin.bean.HttpResult
-import com.kx.kotlin.bean.LoginData
+import com.kx.kotlin.bean.*
 import io.reactivex.Observable
 import retrofit2.http.*
 
@@ -25,8 +22,21 @@ interface ApiService {
 
     @POST("user/login")
     @FormUrlEncoded
-    fun login(@Field("username") username: String, @Field("password") password: String): Observable<HttpResult<LoginData>>
+    fun login(@Field("username") username: String,
+              @Field("password") password: String): Observable<BaseResponse<LoginData>>
 
+    @POST("user/register")
+    @FormUrlEncoded
+    fun register(@Field("username") username: String,
+                 @Field("password") password: String,
+                 @Field("repassword") repassword: String): Observable<HttpResult<LoginData>>
+
+    /**
+     * 退出登录
+     * http://www.wanandroid.com/user/logout/json
+     */
+    @GET("user/logout/json")
+    fun logout(): Observable<HttpResult<Any>>
 
 
 }
