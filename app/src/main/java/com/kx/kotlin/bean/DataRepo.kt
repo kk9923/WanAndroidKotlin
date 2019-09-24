@@ -30,7 +30,7 @@ data class ArticleResponseBody(
 )
 
 data class HomeData(
-    val banners: List<Banner> ,
+    val banners: List<Banner>,
     val articles: List<Article>
 )
 
@@ -79,6 +79,7 @@ data class Banner(
     val type: Int,
     val url: String
 )
+
 //
 //data class HotKey(
 //        @Json(name = "id") val id: Int,
@@ -120,17 +121,17 @@ data class Banner(
 //) : Serializable
 //
 //// 登录数据
-//data class LoginData(
-//        @Json(name = "chapterTops") val chapterTops: MutableList<String>,
-//        @Json(name = "collectIds") val collectIds: MutableList<String>,
-//        @Json(name = "email") val email: String,
-//        @Json(name = "icon") val icon: String,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "password") val password: String,
-//        @Json(name = "token") val token: String,
-//        @Json(name = "type") val type: Int,
-//        @Json(name = "username") val username: String
-//)
+data class LoginData(
+    val chapterTops: MutableList<String>,
+    val collectIds: MutableList<String>,
+    val email: String,
+    val icon: String,
+    val id: Int,
+    val password: String,
+    val token: String,
+    val type: Int,
+    val username: String
+)
 //
 ////收藏网站
 //data class CollectionWebsite(

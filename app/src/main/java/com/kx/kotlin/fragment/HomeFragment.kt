@@ -7,16 +7,17 @@ import android.support.v7.widget.DefaultItemAnimator
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.HomeListAdapter
+import com.kx.kotlin.base.BaseFragment
 import com.kx.kotlin.bean.ArticleResponseBody
 import com.kx.kotlin.bean.Banner
 import com.kx.kotlin.bean.HomeData
 import com.kx.kotlin.bean.HttpResult
 import com.kx.kotlin.constant.Constant
+import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.theme.ThemeEvent
 import com.kx.kotlin.ui.ArticlesDetailActivity
@@ -119,7 +120,7 @@ class HomeFragment : BaseFragment() {
                     refreshLayout.finishRefresh(true)
                 }, { it ->
                     run {
-                        Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+                        showToast("$it.message")
                     }
                 }
                 ))
@@ -137,7 +138,7 @@ class HomeFragment : BaseFragment() {
                     refreshLayout.finishLoadMore()
                 }, { it ->
                     run {
-                        Toast.makeText(activity, "$it.message", Toast.LENGTH_SHORT).show()
+                        showToast("$it.message")
                     }
                 }
                 )
@@ -181,7 +182,6 @@ class HomeFragment : BaseFragment() {
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this)
         }
-        clearDispose()
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

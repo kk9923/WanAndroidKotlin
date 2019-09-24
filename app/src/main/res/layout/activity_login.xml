@@ -27,7 +27,7 @@
             android:contentDescription="@null" />
 
         <EditText
-            android:id="@+id/login_account_edit"
+            android:id="@+id/et_username"
             style="@style/style_circle_edit"
             android:hint="@string/login_account_tint"
             android:layout_marginStart="@dimen/dp_6"/>
@@ -59,7 +59,7 @@
             android:contentDescription="@null" />
 
         <EditText
-            android:id="@+id/login_password_edit"
+            android:id="@+id/et_password"
             style="@style/style_circle_edit"
             android:hint="@string/login_password_tint"
             android:inputType="textPassword"

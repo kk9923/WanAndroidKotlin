@@ -17,14 +17,16 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import com.kx.kotlin.R
+import com.kx.kotlin.event.LoginEvent
+import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.fragment.HomeFragment
 import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.theme.ThemeEvent
 import com.kx.kotlin.theme.ThemeManager
 import com.kx.kotlin.theme.ThemeUtils
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header_main.*
 import kotlinx.android.synthetic.main.toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -92,7 +94,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                        Toast.makeText(context, getString(R.string.nav_my_score), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_my_score))
                     }
                     R.id.nav_collect -> {
 //                    if (isLogin) {
@@ -101,7 +103,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                        Toast.makeText(context, getString(R.string.nav_my_collect), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_my_collect))
                     }
                     R.id.nav_todo -> {
 //                    if (isLogin) {
@@ -112,7 +114,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                        showToast(resources.getString(R.string.login_tint))
 //                        goLogin()
 //                    }
-                        Toast.makeText(context, getString(R.string.nav_todo), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_my_collect))
                     }
                     R.id.nav_night_mode -> {
 //                    if (SettingUtil.getIsNightMode()) {
@@ -126,22 +128,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //                    recreate()
                         ThemeManager.changeTheme(context)
                         ThemeUtils.startThemeChangeRevealAnimation(context, nav_night_mode)
-                        Toast.makeText(context, getString(R.string.nav_night_mode), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_night_mode))
                     }
                     R.id.nav_setting -> {
 //                    Intent(this@MainActivity, SettingActivity::class.java).run {
 //                        // putExtra(Constant.TYPE_KEY, Constant.Type.SETTING_TYPE_KEY)
 //                        startActivity(this)
 //                    }
-                        Toast.makeText(context, getString(R.string.nav_setting), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_setting))
                     }
                     R.id.nav_about_us -> {
                         // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
-                        Toast.makeText(context, getString(R.string.nav_about_us), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_about_us))
                     }
                     R.id.nav_logout -> {
                         // logout()
-                        Toast.makeText(this@MainActivity, getString(R.string.nav_logout), Toast.LENGTH_SHORT).show()
+                        showToast(getString(R.string.nav_logout))
                     }
                 }
                 // drawer_layout.closeDrawer(GravityCompat.START)
@@ -306,6 +308,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         bottom_navigation.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.common_bg))
         nav_view.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.common_bg))
         nav_view_header?.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.nav_header_bg))
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun loginEvent(event: LoginEvent) {
+        if (event.isLogin) {
+            tv_username.text = "小黄鱼"
+            nav_view.menu.findItem(R.id.nav_logout).isVisible = true
+          //  mHomeFragment?.lazyLoad()
+          //  mPresenter?.getUserInfo()
+        } else {
+            tv_username.text = getString(R.string.go_login)
+            nav_view.menu.findItem(R.id.nav_logout).isVisible = false
+          //  mHomeFragment?.lazyLoad()
+            // 重置用户信息
+          //  tv_user_id?.text = getString(R.string.nav_line_4)
+         //   nav_user_grade?.text = getString(R.string.nav_line_2)
+         //   nav_user_rank?.text = getString(R.string.nav_line_2)
+         //   nav_score?.text = ""
+        }
     }
 
     override fun onDestroy() {

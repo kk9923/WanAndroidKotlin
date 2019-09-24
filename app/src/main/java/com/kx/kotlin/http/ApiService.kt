@@ -3,9 +3,9 @@ package com.kx.kotlin.http
 import com.kx.kotlin.bean.ArticleResponseBody
 import com.kx.kotlin.bean.Banner
 import com.kx.kotlin.bean.HttpResult
+import com.kx.kotlin.bean.LoginData
 import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiService {
     /**
@@ -22,6 +22,11 @@ interface ApiService {
      */
     @GET("article/list/{pageNum}/json")
     fun getArticles(@Path("pageNum") pageNum: Int): Observable<HttpResult<ArticleResponseBody>>
+
+    @POST("user/login")
+    @FormUrlEncoded
+    fun login(@Field("username") username: String, @Field("password") password: String): Observable<HttpResult<LoginData>>
+
 
 
 }

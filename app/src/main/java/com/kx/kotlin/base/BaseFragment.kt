@@ -1,4 +1,4 @@
-package com.kx.kotlin.fragment
+package com.kx.kotlin.base
 
 import android.support.v4.app.Fragment
 import io.reactivex.disposables.CompositeDisposable
@@ -14,6 +14,12 @@ open class BaseFragment : Fragment() {
             mCompositeDisposable = CompositeDisposable()
         }
         disposable?.let { mCompositeDisposable?.add(it) }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        clearDispose()
     }
 
 

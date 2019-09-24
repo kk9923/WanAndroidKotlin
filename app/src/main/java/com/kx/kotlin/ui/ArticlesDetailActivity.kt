@@ -11,9 +11,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.*
-import android.widget.Toast
 import com.kx.kotlin.R
 import com.kx.kotlin.constant.Constant
+import com.kx.kotlin.ext.showToast
 import kotlinx.android.synthetic.main.activity_articles_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 
@@ -88,7 +88,7 @@ class ArticlesDetailActivity : AppCompatActivity() {
         @TargetApi(Build.VERSION_CODES.M)
         override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
             super.onReceivedError(view, request, error)
-            Toast.makeText(this@ArticlesDetailActivity,"加载失败: ${error?.description}",Toast.LENGTH_SHORT).show()
+            showToast("加载失败: ${error?.description}")
         }
     }
 
