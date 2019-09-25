@@ -43,6 +43,8 @@ class HomeFragment : BaseFragment() {
 
     private var pageNum: Int = 0
 
+    private var bannerUrls: MutableList<Banner> = mutableListOf()
+
     companion object {
         fun getInstance(): HomeFragment = HomeFragment()
     }
@@ -70,6 +72,22 @@ class HomeFragment : BaseFragment() {
         }
         val headerView = LayoutInflater.from(activity).inflate(R.layout.home_banner, null)
         bannerView = headerView.findViewById(R.id.banner)
+        bannerView.run {
+            this!!.setImageLoader(GlideImageLoader())
+                .setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
+                .setDelayTime(3000)
+                .setIndicatorGravity(BannerConfig.RIGHT)
+                .setOnBannerListener {
+                    val itemData = bannerUrls[it]
+                    val intent = Intent(activity, ArticlesDetailActivity::class.java)
+                    intent.run {
+                        putExtra(Constant.CONTENT_URL_KEY, itemData.url)
+                        putExtra(Constant.CONTENT_TITLE_KEY, itemData.title)
+                        putExtra(Constant.CONTENT_ID_KEY, itemData.id)
+                        startActivity(this)
+                    }
+                }
+        }
 
         homeListAdapter.run {
             addHeaderView(headerView)
@@ -95,53 +113,51 @@ class HomeFragment : BaseFragment() {
         val banner = getBanner()
         val articles = getArticles(pageNum)
         addDisposable(Observable.zip(banner, articles,
-                BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
-                    val homeData = HomeData(t1.data, t2.data.datas)
-                    homeData
-                })
-                .subscribe({ homeData ->
-                    val banners = homeData.banners
-                    val images = arrayListOf<String>()
-                    val titles = arrayListOf<String>()
-                    Observable.fromIterable(banners)
-                            .subscribe { item ->
-                                images.add(item.imagePath)
-                                titles.add(item.title)
-                            }
-                    bannerView?.setImageLoader(GlideImageLoader())
-                    bannerView?.setImages(images)
-                    bannerView?.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE)
-                    bannerView?.setBannerTitles(titles)
-                    bannerView?.setDelayTime(3000)
-                    bannerView?.setIndicatorGravity(BannerConfig.RIGHT)
-                    bannerView?.start()
-                    homeListAdapter.setNewData(homeData.articles)
-                    pageNum++
-                    refreshLayout.finishRefresh(true)
-                }, { it ->
-                    run {
-                        showToast("$it.message")
+            BiFunction<HttpResult<List<Banner>>, HttpResult<ArticleResponseBody>, HomeData> { t1, t2 ->
+                val homeData = HomeData(t1.data, t2.data.datas)
+                homeData
+            })
+            .subscribe({ homeData ->
+                val banners = homeData.banners
+                bannerUrls.clear()
+                val images = arrayListOf<String>()
+                val titles = arrayListOf<String>()
+                Observable.fromIterable(banners)
+                    .subscribe { item ->
+                        images.add(item.imagePath)
+                        titles.add(item.title)
+                        bannerUrls.add(item)
                     }
+                bannerView?.setImages(images)
+                bannerView?.setBannerTitles(titles)
+                bannerView?.start()
+                homeListAdapter.setNewData(homeData.articles)
+                pageNum++
+                refreshLayout.finishRefresh(true)
+            }, { it ->
+                run {
+                    showToast("$it.message")
                 }
-                ))
+            }
+            ))
     }
 
-    fun loadMore(){
+    fun loadMore() {
         //  加载更多的时候禁调滑动
         //  直接设置接口数据时,当界面刷新完毕后,会在屏幕底部显示加载完成的文字
         recyclerView.stopScroll()
         addDisposable(getArticles(pageNum)
-                .subscribe({
-                    val datas = it.data.datas
-                    homeListAdapter.addData(datas)
-                    pageNum++
-                    refreshLayout.finishLoadMore()
-                }, { it ->
-                    run {
-                        showToast("$it.message")
-                    }
+            .subscribe({
+                val datas = it.data.datas
+                homeListAdapter.addData(datas)
+                pageNum++
+                refreshLayout.finishLoadMore()
+            }, { it ->
+                run {
+                    showToast("$it.message")
                 }
-                )
+            }
+            )
         )
     }
 
