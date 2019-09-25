@@ -1,13 +1,19 @@
 package com.kx.kotlin.http
 
 import com.kx.kotlin.BuildConfig
+import com.kx.kotlin.WanAndroidApplication
 import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.constant.HttpConstant
+import com.kx.kotlin.http.interceptor.CacheInterceptor
+import com.kx.kotlin.http.interceptor.HeaderInterceptor
+import com.kx.kotlin.http.interceptor.SaveCookieInterceptor
+import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 /**
@@ -49,15 +55,15 @@ object RetrofitHelper {
         }
 
         //设置 请求的缓存的大小跟位置
-       // val cacheFile = File(App.context.cacheDir, "cache")
-       // val cache = Cache(cacheFile, HttpConstant.MAX_CACHE_SIZE)
+        val cacheFile = File(WanAndroidApplication.context.cacheDir, "cache")
+        val cache = Cache(cacheFile, HttpConstant.MAX_CACHE_SIZE)
 
         builder.run {
             addInterceptor(httpLoggingInterceptor)
-          //  addInterceptor(HeaderInterceptor())
-         //   addInterceptor(SaveCookieInterceptor())
-         //   addInterceptor(CacheInterceptor())
-        //    cache(cache)  //添加缓存
+            addInterceptor(HeaderInterceptor())
+            addInterceptor(SaveCookieInterceptor())
+            addInterceptor(CacheInterceptor())
+            cache(cache)  //添加缓存
             connectTimeout(HttpConstant.DEFAULT_TIMEOUT, TimeUnit.SECONDS)
             readTimeout(HttpConstant.DEFAULT_TIMEOUT, TimeUnit.SECONDS)
             writeTimeout(HttpConstant.DEFAULT_TIMEOUT, TimeUnit.SECONDS)

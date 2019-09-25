@@ -1,5 +1,7 @@
 package com.kx.kotlin.constant
 
+import com.kx.kotlin.util.SPUtils
+
 object HttpConstant {
 
     const val DEFAULT_TIMEOUT: Long = 15
@@ -39,15 +41,15 @@ object HttpConstant {
         return sb.toString()
     }
 
-//    fun saveCookie(url: String?, domain: String?, cookies: String) {
-//        url ?: return
-//        var spUrl: String by Preference(url, cookies)
-//        @Suppress("UNUSED_VALUE")
-//        spUrl = cookies
-//        domain ?: return
-//        var spDomain: String by Preference(domain, cookies)
-//        @Suppress("UNUSED_VALUE")
-//        spDomain = cookies
-//    }
+    fun saveCookie(url: String?, domain: String?, cookies: String) {
+        url ?: return
+        var spUrl: String by SPUtils(url, cookies)
+        @Suppress("UNUSED_VALUE")
+        spUrl = cookies
+        domain ?: return
+        var spDomain: String by SPUtils(domain, cookies)
+        @Suppress("UNUSED_VALUE")
+        spDomain = cookies
+    }
 
 }

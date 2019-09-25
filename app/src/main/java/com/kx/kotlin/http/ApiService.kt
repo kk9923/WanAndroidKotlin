@@ -38,5 +38,12 @@ interface ApiService {
     @GET("user/logout/json")
     fun logout(): Observable<HttpResult<Any>>
 
+    /**
+     * 获取个人积分，需要登录后访问
+     * https://www.wanandroid.com/lg/coin/userinfo/json
+     */
+    @GET("/lg/coin/userinfo/json")
+    fun getUserInfo(): Observable<BaseResponse<UserInfo>>
+
 
 }

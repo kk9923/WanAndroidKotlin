@@ -8,17 +8,17 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AlertDialog
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.WindowManager
+import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.kx.kotlin.R
 import com.kx.kotlin.base.BaseActivity
+import com.kx.kotlin.base.BaseObserver
+import com.kx.kotlin.bean.UserInfo
 import com.kx.kotlin.event.LoginEvent
 import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.fragment.HomeFragment
@@ -27,6 +27,7 @@ import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.theme.ThemeEvent
 import com.kx.kotlin.theme.ThemeManager
 import com.kx.kotlin.theme.ThemeUtils
+import com.kx.kotlin.util.RxUtil
 import com.kx.kotlin.util.RxUtils
 import com.kx.kotlin.util.SPUtils
 import kotlinx.android.synthetic.main.activity_main.*
@@ -35,7 +36,6 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.activityUiThread
 import org.jetbrains.anko.doAsync
 
 
@@ -45,14 +45,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private var nav_night_mode: TextView? = null
     private var nav_night_mode_menu: MenuItem? = null
     private var nav_view_header: LinearLayout? = null
-    /**
-     * username TextView
-     */
     private var nav_username: TextView? = null
-    /**
-     * user_id TextView
-     */
     private var nav_user_id: TextView? = null
+    private var nav_user_grade: TextView? = null
+    private var nav_user_rank: TextView? = null
+    private var nav_score: TextView? = null
 
     override fun onClick(v: View?) {
     }
@@ -75,6 +72,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
+        if (isLogin){
+            getUserInfo()
+        }
     }
 
     private fun initNavView() {
@@ -82,10 +82,18 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             nav_night_mode_menu = menu.findItem(R.id.nav_night_mode)
             nav_username = getHeaderView(0).findViewById(R.id.tv_username)
             nav_user_id = getHeaderView(0).findViewById(R.id.tv_user_id)
+            nav_user_grade = getHeaderView(0).findViewById(R.id.tv_user_grade)
+            nav_user_rank = getHeaderView(0).findViewById(R.id.tv_user_rank)
             nav_night_mode = MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_night_mode)) as TextView
+            nav_score = MenuItemCompat.getActionView(nav_view.menu.findItem(R.id.nav_score)) as TextView
+            nav_score?.gravity = Gravity.CENTER_VERTICAL
             nav_view_header = getHeaderView(0).findViewById(R.id.nav_view_header)
-            nav_view_header?.setOnClickListener {
-                goLogin()
+            nav_view_header.run {
+                if(!isLogin){
+                    setOnClickListener {
+                        goLogin()
+                    }
+                }
             }
             setNavigationItemSelectedListener(onDrawerNavigationItemSelectedListener)
             menu.findItem(R.id.nav_logout).isVisible = isLogin
@@ -318,7 +326,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
      * Logout
      */
     private fun logout() {
-        var builder = AlertDialog.Builder(this)
+        val builder = AlertDialog.Builder(this)
         builder.setMessage(getString(R.string.confirm_logout))
         builder.setPositiveButton("确定") { _, _ ->
             RetrofitHelper.service.logout().compose(RxUtils.ioMain())
@@ -326,7 +334,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     doAsync {
                         // CookieManager().clearAllCookies()
                         SPUtils.clearPreference()
-                        activityUiThread {
+                        runOnUiThread {
                             showToast(resources.getString(R.string.logout_success))
                             username = tv_username.text.toString().trim()
                             isLogin = false
@@ -349,7 +357,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
         val isDay = ThemeManager.isDay()
         nav_night_mode_menu?.title = if (isDay) getString(R.string.nav_night_mode) else getString(R.string.nav_day_mode)
-       // nav_night_mode?.text = if (isDay) getString(R.string.nav_night_mode) else getString(R.string.nav_day_mode)
 
     }
 
@@ -360,16 +367,48 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             nav_view.menu.findItem(R.id.nav_logout).isVisible = true
             //  mHomeFragment?.lazyLoad()
             //  mPresenter?.getUserInfo()
+            getUserInfo()
         } else {
             tv_username.text = getString(R.string.go_login)
             nav_view.menu.findItem(R.id.nav_logout).isVisible = false
             //  mHomeFragment?.lazyLoad()
             // 重置用户信息
-            //  tv_user_id?.text = getString(R.string.nav_line_4)
-            //   nav_user_grade?.text = getString(R.string.nav_line_2)
-            //   nav_user_rank?.text = getString(R.string.nav_line_2)
-            //   nav_score?.text = ""
+               tv_user_id?.text = getString(R.string.nav_line_4)
+               nav_user_grade?.text = getString(R.string.nav_line_2)
+               nav_user_rank?.text = getString(R.string.nav_line_2)
+               nav_score?.text = ""
         }
+    }
+
+    private fun getUserInfo() {
+        addDisposable(RetrofitHelper.service.getUserInfo().compose(RxUtil.ioMain())
+            .subscribeWith(object :BaseObserver<UserInfo>(){
+                override fun onSuccess(result: UserInfo) {
+                    tv_user_id?.text = result.userId.toString()
+                    nav_user_grade?.text = (result.coinCount / 100 + 1).toString()
+                    nav_user_rank?.text = result.rank.toString()
+                    nav_score?.text = result.coinCount.toString()
+                }
+                override fun onError(errorMsg: String) {
+                }
+            })
+        )
+    }
+
+    private var lastPressTime : Long = 0
+
+    override fun onBackPressed() {
+        val drawerOpen = drawer_layout.isDrawerOpen(GravityCompat.START)
+        if (drawerOpen){
+            drawer_layout.closeDrawer(GravityCompat.START)
+            return
+        }
+        if (System.currentTimeMillis() - lastPressTime  > 2000){
+            lastPressTime = System.currentTimeMillis()
+            showToast(getString(R.string.exit_tip))
+            return
+        }
+        super.onBackPressed()
     }
 
     override fun onDestroy() {

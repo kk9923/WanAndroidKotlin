@@ -9,7 +9,7 @@ abstract class BaseObserver<T> : ResourceObserver<BaseResponse<T>>() {
 
     override fun onNext(t: BaseResponse<T>) {
         when {
-            t.errorCode == ErrorStatus.SUCCESS -> onSuccess(t.data)
+            t.errorCode == ErrorStatus.SUCCESS  -> onSuccess(t.data!!)
             t.errorCode == ErrorStatus.TOKEN_INVALID -> {
                 // TODO Token 过期，重新登录
             }
@@ -34,7 +34,7 @@ abstract class BaseObserver<T> : ResourceObserver<BaseResponse<T>>() {
     /**
      * 成功的回调
      */
-    protected abstract fun onSuccess(result: T?)
+    protected abstract fun onSuccess(result: T)
 
     protected abstract fun onError(errorMsg: String)
 

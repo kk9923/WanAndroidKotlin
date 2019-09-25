@@ -75,14 +75,17 @@ class RegisterActivity : BaseActivity() {
         if (username.isEmpty()) {
             showToast(getString(R.string.username_not_empty))
             valid = false
+            return valid
         }
         if (password.isEmpty()) {
             showToast(getString(R.string.password_not_empty))
             valid = false
+            return valid
         }
         if (repassword.isEmpty()) {
             showToast(getString(R.string.confirm_password_not_empty))
             valid = false
+            return valid
         }
         if (password != repassword) {
             showToast(getString(R.string.password_cannot_match))
