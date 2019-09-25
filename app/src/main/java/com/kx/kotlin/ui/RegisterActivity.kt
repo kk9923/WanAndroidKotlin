@@ -22,9 +22,6 @@ class RegisterActivity : BaseActivity() {
             title = resources.getString(R.string.register)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            setNavigationOnClickListener {
-                finish()
-            }
         }
         register.setOnClickListener(onClickListener)
         login.setOnClickListener(onClickListener)

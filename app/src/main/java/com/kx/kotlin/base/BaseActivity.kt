@@ -1,6 +1,7 @@
 package com.kx.kotlin.base
 
 import android.support.v7.app.AppCompatActivity
+import android.view.MenuItem
 import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.util.SPUtils
 import io.reactivex.disposables.CompositeDisposable
@@ -40,8 +41,17 @@ open class BaseActivity : AppCompatActivity() {
     }
 
 
-    fun clearDispose() {
+   private fun clearDispose() {
         mCompositeDisposable?.clear()  // 保证Activity结束时取消
         mCompositeDisposable = null
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        when (item?.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

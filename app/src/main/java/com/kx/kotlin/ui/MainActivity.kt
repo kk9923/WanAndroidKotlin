@@ -118,10 +118,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             when (item.itemId) {
                 R.id.nav_score -> {
                     if (isLogin) {
-//                        Intent(this@MainActivity, ScoreActivity::class.java).run {
-//                            startActivity(this)
-//                        }
-                        showToast(getString(R.string.nav_my_score))
+                        Intent(this@MainActivity, ScoreActivity::class.java).run {
+                            startActivity(this)
+                        }
                     } else {
                         goLogin()
                     }

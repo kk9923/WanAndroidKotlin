@@ -24,9 +24,6 @@ class LoginActivity : BaseActivity() {
             title = getString(R.string.login)
             setSupportActionBar(this)
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            setNavigationOnClickListener {
-                finish()
-            }
             //supportActionBar?.title = getString(R.string.login)
         }
         register.setOnClickListener {
@@ -48,7 +45,7 @@ class LoginActivity : BaseActivity() {
                             showToast(errorMsg)
                         }
                         override fun onSuccess(result: LoginData) {
-                            username = result!!.username
+                            username = result.username
                             password = result.password
                             token = result.token
                             isLogin = true

@@ -45,5 +45,14 @@ interface ApiService {
     @GET("/lg/coin/userinfo/json")
     fun getUserInfo(): Observable<BaseResponse<UserInfo>>
 
+    /**
+     * 获取个人积分列表，需要登录后访问
+     * https://www.wanandroid.com//lg/coin/list/1/json
+     * @param page 页码 从1开始
+     */
+    @GET("/lg/coin/list/{page}/json")
+    fun getUserScore(@Path("page") page: Int): Observable<BaseResponse<ScoreResponseBody>>
+
+
 
 }

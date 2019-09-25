@@ -29,6 +29,16 @@ data class ArticleResponseBody(
     val total: Int
 )
 
+data class ScoreResponseBody(
+    val curPage: Int,
+    var datas: MutableList<UserScoreBean>,
+    val offset: Int,
+    val over: Boolean,
+    val pageCount: Int,
+    val size: Int,
+    val total: Int
+)
+
 data class HomeData(
     val banners: List<Banner>,
     val articles: List<Article>
@@ -277,18 +287,19 @@ data class UserInfo(
     val userId: Int,
     val username: String
 )
+
 //
-//// 个人积分实体
-//data class UserScoreBean(
-//        @Json(name = "coinCount") val coinCount: Int,
-//        @Json(name = "date") val date: Long,
-//        @Json(name = "desc") val desc: String,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "reason") val reason: String,
-//        @Json(name = "type") val type: Int,
-//        @Json(name = "userId") val userId: Int,
-//        @Json(name = "userName") val userName: String
-//)
+// 个人积分实体
+data class UserScoreBean(
+    val coinCount: Int,
+    val date: Long,
+    val desc: String,
+    val id: Int,
+    val reason: String,
+    val type: Int,
+    val userId: Int,
+    val userName: String
+)
 //
 //// 排行榜实体
 //data class RankBean(
