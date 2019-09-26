@@ -9,6 +9,8 @@ import io.reactivex.disposables.Disposable
 
 open class BaseActivity : AppCompatActivity() {
 
+    protected val mActivity by lazy { this }
+
     protected var isLogin: Boolean by SPUtils(Constant.LOGIN_KEY, false)
     /**
      * local username

@@ -38,6 +38,15 @@ data class ScoreResponseBody(
     val size: Int,
     val total: Int
 )
+data class MyCollectResponseBody(
+    val curPage: Int,
+    var datas: MutableList<CollectionArticle>,
+    val offset: Int,
+    val over: Boolean,
+    val pageCount: Int,
+    val size: Int,
+    val total: Int
+)
 
 data class HomeData(
     val banners: List<Banner>,
@@ -156,24 +165,25 @@ data class LoginData(
 //        @Json(name = "visible") val visible: Int
 //)
 //
-//data class CollectionArticle(
-//        @Json(name = "author") val author: String,
-//        @Json(name = "chapterId") val chapterId: Int,
-//        @Json(name = "chapterName") val chapterName: String,
-//        @Json(name = "courseId") val courseId: Int,
-//        @Json(name = "desc") val desc: String,
-//        @Json(name = "envelopePic") val envelopePic: String,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "link") val link: String,
-//        @Json(name = "niceDate") val niceDate: String,
-//        @Json(name = "origin") val origin: String,
-//        @Json(name = "originId") val originId: Int,
-//        @Json(name = "publishTime") val publishTime: Long,
-//        @Json(name = "title") val title: String,
-//        @Json(name = "userId") val userId: Int,
-//        @Json(name = "visible") val visible: Int,
-//        @Json(name = "zan") val zan: Int
-//)
+data class CollectionArticle(
+    val author: String,
+    val chapterId: Int,
+    val chapterName: String,
+    val courseId: Int,
+    val desc: String,
+    val envelopePic: String,
+    val id: Int,
+    val link: String,
+    val niceDate: String,
+    val origin: String,
+    val originId: Int,
+    val publishTime: Long,
+    val title: String,
+    val userId: Int,
+    val visible: Int,
+    val zan: Int
+)
+
 //
 //// 导航
 //data class NavigationBean(

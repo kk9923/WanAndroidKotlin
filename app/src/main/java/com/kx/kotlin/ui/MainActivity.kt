@@ -126,13 +126,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     }
                 }
                 R.id.nav_collect -> {
-//                    if (isLogin) {
-//                        goCommonActivity(Constant.Type.COLLECT_TYPE_KEY)
-//                    } else {
-//                        showToast(resources.getString(R.string.login_tint))
-//                        goLogin()
-//                    }
-                    showToast(getString(R.string.nav_my_collect))
+                    if (isLogin) {
+                        Intent(this@MainActivity, MyCollectActivity::class.java).run {
+                            startActivity(this)
+                        }
+                    } else {
+                        goLogin()
+                    }
                 }
                 R.id.nav_todo -> {
 //                    if (isLogin) {
@@ -170,9 +170,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private fun initBottomNavigation() {
         bottom_navigation.run {
-            // 以前使用 BottomNavigationViewHelper.disableShiftMode(this) 方法来设置底部图标和字体都显示并去掉点击动画
-            // 升级到 28.0.0 之后，官方重构了 BottomNavigationView ，目前可以使用 labelVisibilityMode = 1 来替代
-            // BottomNavigationViewHelper.disableShiftMode(this)
             labelVisibilityMode = 1
             setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
             setOnNavigationItemSelectedListener { item ->
@@ -246,12 +243,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         }
 
     private fun initDrawerLayout() {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-//            var params = window.attributes
-//            params.flags = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS
-//            drawer_layout.fitsSystemWindows = true
-//            drawer_layout.clipToPadding = false
-//        }
         drawer_layout.run {
             val toggle = ActionBarDrawerToggle(
                 this@MainActivity,

@@ -53,6 +53,15 @@ interface ApiService {
     @GET("/lg/coin/list/{page}/json")
     fun getUserScore(@Path("page") page: Int): Observable<BaseResponse<ScoreResponseBody>>
 
+    /**
+     *  获取收藏列表
+     *  http://www.wanandroid.com/lg/collect/list/0/json
+     *  @param page
+     */
+    @GET("lg/collect/list/{page}/json")
+    fun getCollectList(@Path("page") page: Int): Observable<BaseResponse<MyCollectResponseBody>>
+
+
 
 
 }
