@@ -14,8 +14,7 @@
             android:id="@+id/refreshLayout"
             app:srlAccentColor="@android:color/white"
             app:srlPrimaryColor="@color/colorPrimary"
-            app:srlEnablePreviewInEditMode="true"
-            app:srlEnableScrollContentWhenLoaded="true"
+            app:srlEnableScrollContentWhenLoaded="false"
             app:srlEnableFooterFollowWhenLoadFinished="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -28,6 +27,7 @@
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:overScrollMode="never"
                 app:layoutManager="android.support.v7.widget.LinearLayoutManager" />
 
         <com.scwang.smartrefresh.layout.footer.ClassicsFooter

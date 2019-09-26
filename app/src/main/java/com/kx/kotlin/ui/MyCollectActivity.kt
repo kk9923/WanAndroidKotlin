@@ -35,16 +35,20 @@ class MyCollectActivity : BaseActivity() {
         }
         mMyCollectAdapter.run {
             onItemClickListener = this@MyCollectActivity.onItemClickListener
+//            setOnLoadMoreListener({
+//                getCollectList()
+//            },recyclerView)
         }
         refreshLayout.run {
-            setEnableOverScrollBounce(false)
-            setEnableOverScrollDrag(false)
+            refreshLayout.setEnableOverScrollDrag(false);//禁止越界拖动（1.0.4以上版本）
+            refreshLayout.setEnableOverScrollBounce(false);//关闭越界回弹功能
+            refreshLayout.setEnableLoadMoreWhenContentNotFull(false);//关闭越界回弹功能
             setOnRefreshListener {
                 pageNum = 0
                 getCollectList()
             }
             setOnLoadMoreListener {
-                recyclerView.stopScroll()
+              //  recyclerView.stopScroll()
                 getCollectList()
             }
         }
@@ -66,9 +70,7 @@ class MyCollectActivity : BaseActivity() {
                         }else{
                             mMyCollectAdapter.addData(result.datas)
                             if (result.datas.size < result.size){
-//                                refreshLayout.finishLoadMoreWithNoMoreData()
-//                                refreshLayout.setEnableLoadMore(false)
-                                refreshLayout.setNoMoreData(false)
+                                refreshLayout.finishLoadMoreWithNoMoreData()
                             }else{
                                 refreshLayout.finishLoadMore()
                             }
@@ -76,6 +78,7 @@ class MyCollectActivity : BaseActivity() {
                         pageNum ++
                     }
                     override fun onError(errorMsg: String) {
+                        refreshLayout.finishRefresh(false)
                         showToast(errorMsg)
                     }
                 })
