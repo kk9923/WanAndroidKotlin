@@ -5,11 +5,16 @@ import com.kx.kotlin.http.ErrorStatus
 import com.kx.kotlin.http.ExceptionHandle
 import io.reactivex.observers.ResourceObserver
 
-abstract class BaseObserver<T> : ResourceObserver<BaseResponse<T>>() {
+open class BaseObserver<T> : ResourceObserver<BaseResponse<T>>() {
 
     override fun onNext(t: BaseResponse<T>) {
         when {
-            t.errorCode == ErrorStatus.SUCCESS  -> onSuccess(t.data!!)
+            t.errorCode == ErrorStatus.SUCCESS ->
+                if (t.data != null) {
+                    onSuccess(t.data!!)
+                } else {
+                    onSuccess()
+                }
             t.errorCode == ErrorStatus.TOKEN_INVALID -> {
                 // TODO Token 过期，重新登录
             }
@@ -32,10 +37,18 @@ abstract class BaseObserver<T> : ResourceObserver<BaseResponse<T>>() {
     }
 
     /**
-     * 成功的回调
+     * 成功的回调--有返回结果
      */
-    protected abstract fun onSuccess(result: T)
-
-    protected abstract fun onError(errorMsg: String)
-
+    open fun onSuccess(result: T) {
+    }
+    /**
+     * 成功的回调--无返回结果
+     */
+    open fun onSuccess() {
+    }
+    /**
+     * 失败回调
+     */
+    open fun onError(errorMsg: String) {
+    }
 }

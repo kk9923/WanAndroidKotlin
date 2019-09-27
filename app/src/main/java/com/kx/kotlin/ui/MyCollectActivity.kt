@@ -1,6 +1,5 @@
 package com.kx.kotlin.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -9,7 +8,6 @@ import com.kx.kotlin.adapter.MyCollectAdapter
 import com.kx.kotlin.base.BaseActivity
 import com.kx.kotlin.base.BaseObserver
 import com.kx.kotlin.bean.MyCollectResponseBody
-import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.util.RxUtil
@@ -38,6 +36,7 @@ class MyCollectActivity : BaseActivity() {
 //            setOnLoadMoreListener({
 //                getCollectList()
 //            },recyclerView)
+            onItemChildClickListener = this@MyCollectActivity.onItemChildClickListener
         }
         refreshLayout.run {
             refreshLayout.setEnableOverScrollDrag(false);//禁止越界拖动（1.0.4以上版本）
@@ -87,14 +86,41 @@ class MyCollectActivity : BaseActivity() {
 
     private val onItemClickListener  = BaseQuickAdapter.OnItemClickListener { _, _, position ->
             val itemData = mMyCollectAdapter.data[position]
-            val intent = Intent(mActivity, ArticlesDetailActivity::class.java)
-            intent.run {
-                putExtra(Constant.CONTENT_URL_KEY, itemData.link)
-                putExtra(Constant.CONTENT_TITLE_KEY, itemData.title)
-                putExtra(Constant.CONTENT_ID_KEY, itemData.id)
-                startActivity(this)
+             ArticlesDetailActivity.start(mActivity,itemData.id,itemData.title,itemData.link)
+    }
+
+    private val onItemChildClickListener =
+        BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
+            if (mMyCollectAdapter.data.size != 0) {
+                val data = mMyCollectAdapter.data[position]
+                when (view.id) {
+                    R.id.iv_like -> {
+                        removeCollectArticle(data.id, data.originId,position)
+                    }
+                }
             }
         }
+
+    /**
+     *   RecyclerView的notifyItemRemoved(position) 和 SmartRefreshLayout 结合起来使用有bug
+     *   在 notifyItemRemoved 动画未结束前 , SmartRefreshLayout 的 footer 就已经移动到上面了
+     */
+    private fun removeCollectArticle(id: Int, originId: Int, position: Int) {
+        addDisposable(RetrofitHelper.service.removeCollectArticle(id,originId)
+            .compose(RxUtil.ioMain())
+            .subscribeWith(object : BaseObserver<Any>() {
+                override fun onSuccess() {
+                    showToast(getString(R.string.cancel_collect_success))
+                    mMyCollectAdapter.data.removeAt(position)
+                    mMyCollectAdapter.notifyDataSetChanged()
+                  //  mMyCollectAdapter.notifyItemChanged(position)
+                }
+                override fun onError(errorMsg: String) {
+                    showToast(errorMsg)
+                }
+            })
+        )
+    }
 
     private val mMyCollectAdapter : MyCollectAdapter by lazy {
         MyCollectAdapter(mActivity)

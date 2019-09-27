@@ -1,27 +1,44 @@
 package com.kx.kotlin.ui
 
 import android.annotation.TargetApi
+import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.*
 import com.kx.kotlin.R
+import com.kx.kotlin.base.BaseActivity
+import com.kx.kotlin.base.BaseObserver
 import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.ext.showToast
+import com.kx.kotlin.http.RetrofitHelper
+import com.kx.kotlin.util.RxUtil
 import kotlinx.android.synthetic.main.activity_articles_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
 
-class ArticlesDetailActivity : AppCompatActivity() {
+class ArticlesDetailActivity : BaseActivity() {
 
     private lateinit var shareTitle: String
     private lateinit var shareUrl: String
     private var shareId: Int = 0
+
+    companion object {
+        fun start(context :Context? ,id: Int, title: String, url: String) {
+            context ?: return
+            val intent = Intent(context, ArticlesDetailActivity::class.java)
+            intent.run {
+                putExtra(Constant.CONTENT_ID_KEY, id)
+                putExtra(Constant.CONTENT_TITLE_KEY,title)
+                putExtra(Constant.CONTENT_URL_KEY, url)
+            }
+            context.startActivity(intent)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,8 +77,9 @@ class ArticlesDetailActivity : AppCompatActivity() {
 
         }
     }
+
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private val webViewClient = object : WebViewClient(){
+    private val webViewClient = object : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             val url = request?.url.toString()
             try {
@@ -76,6 +94,7 @@ class ArticlesDetailActivity : AppCompatActivity() {
                 return false
             }
         }
+
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             progressBar.visibility = View.GONE
@@ -85,6 +104,7 @@ class ArticlesDetailActivity : AppCompatActivity() {
             super.onPageStarted(view, url, favicon)
             progressBar.visibility = View.VISIBLE
         }
+
         @TargetApi(Build.VERSION_CODES.M)
         override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
             super.onReceivedError(view, request, error)
@@ -108,9 +128,9 @@ class ArticlesDetailActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (webView.canGoBack()){
+        if (webView.canGoBack()) {
             webView.goBack()
-        }else{
+        } else {
             super.onBackPressed()
         }
     }
@@ -132,21 +152,22 @@ class ArticlesDetailActivity : AppCompatActivity() {
                             getString(R.string.app_name),
                             shareTitle,
                             shareUrl
-                        ))
+                        )
+                    )
                     type = Constant.CONTENT_SHARE_TYPE
                     startActivity(Intent.createChooser(this, getString(R.string.action_share)))
                 }
                 return true
             }
             R.id.action_like -> {
-//                if (isLogin) {
-//                    mPresenter?.addCollectArticle(shareId)
-//                } else {
-//                    Intent(this, LoginActivity::class.java).run {
-//                        startActivity(this)
-//                    }
-//                    showToast(resources.getString(R.string.login_tint))
-//                }
+                if (isLogin) {
+                    addCollectArticle(shareId)
+                } else {
+                    Intent(this, LoginActivity::class.java).run {
+                        startActivity(this)
+                    }
+                    showToast(resources.getString(R.string.login_tint))
+                }
                 return true
             }
             R.id.action_browser -> {
@@ -160,5 +181,19 @@ class ArticlesDetailActivity : AppCompatActivity() {
 
         }
         return super.onOptionsItemSelected(item)
+    }
+    private fun addCollectArticle(id: Int) {
+        addDisposable(
+            RetrofitHelper.service.addCollectArticle(id)
+                .compose(RxUtil.ioMain())
+                .subscribeWith(object : BaseObserver<Any>() {
+                    override fun onSuccess() {
+                        showToast(getString(R.string.collect_success))
+                    }
+                    override fun onError(errorMsg: String) {
+                        showToast(errorMsg)
+                    }
+                })
+        )
     }
 }

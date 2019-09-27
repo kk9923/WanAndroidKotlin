@@ -157,8 +157,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     showToast(getString(R.string.nav_setting))
                 }
                 R.id.nav_about_us -> {
+                    Intent(this@MainActivity, AboutUsActivity::class.java).run {
+                        startActivity(this)
+                    }
                     // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
-                    showToast(getString(R.string.nav_about_us))
                 }
                 R.id.nav_logout -> {
                      logout()

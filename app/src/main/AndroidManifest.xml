@@ -36,6 +36,8 @@
         <activity android:name=".ui.ScoreActivity"/>
         <activity android:name=".ui.MyCollectActivity">
         </activity>
+        <activity android:name=".ui.AboutUsActivity">
+        </activity>
     </application>
 
 </manifest>
