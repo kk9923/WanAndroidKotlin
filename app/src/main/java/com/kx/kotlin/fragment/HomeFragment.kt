@@ -1,11 +1,10 @@
 package com.kx.kotlin.fragment
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.widget.DividerItemDecoration
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.kx.kotlin.R
@@ -48,24 +47,12 @@ class HomeFragment : BaseFragment() {
         fun getInstance(): HomeFragment = HomeFragment()
     }
 
-    var rootView: View? = null
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        rootView = inflater.inflate(R.layout.fragment_home, container, false)
-        return rootView
-    }
+    override fun attachLayoutRes(): Int = R.layout.fragment_home
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this)
-        }
-    }
-
-    @SuppressLint("CheckResult")
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
+    override fun initView() {
         recyclerView.run {
             adapter = homeListAdapter
+            layoutManager = mLayoutManager
             itemAnimator = null
             recyclerViewItemDecoration?.let { addItemDecoration(it) }
         }
@@ -78,7 +65,7 @@ class HomeFragment : BaseFragment() {
                 .setIndicatorGravity(BannerConfig.RIGHT)
                 .setOnBannerListener {
                     val itemData = bannerUrls[it]
-                    ArticlesDetailActivity.start(activity,itemData.id,itemData.title,itemData.url)
+                    ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.url)
                 }
         }
 
@@ -100,6 +87,13 @@ class HomeFragment : BaseFragment() {
             })
         }
         refreshLayout.autoRefresh()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this)
+        }
     }
 
     fun onRefresh() {
@@ -166,8 +160,8 @@ class HomeFragment : BaseFragment() {
 
     private val recyclerViewItemDecoration by lazy {
         activity?.let {
-        //    SpaceItemDecoration(it)
-            DividerItemDecoration(activity,DividerItemDecoration.VERTICAL)
+            //    SpaceItemDecoration(it)
+            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
         }
     }
     private val homeListAdapter: HomeListAdapter by lazy {
@@ -177,7 +171,7 @@ class HomeFragment : BaseFragment() {
     private val onItemClickListener = object : OnItemClickListener {
         override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
             val itemData = homeListAdapter.data[position]
-            ArticlesDetailActivity.start(activity,itemData.id,itemData.title,itemData.link)
+            ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
         }
     }
 
@@ -187,10 +181,10 @@ class HomeFragment : BaseFragment() {
                 val data = homeListAdapter.data[position]
                 when (view.id) {
                     R.id.iv_like -> {
-                        if (data.collect){
-                            cancelCollectArticle(data.id,position)
-                        }else{
-                            addCollectArticle(data.id,position)
+                        if (data.collect) {
+                            cancelCollectArticle(data.id, position)
+                        } else {
+                            addCollectArticle(data.id, position)
                         }
                     }
                 }
@@ -198,37 +192,41 @@ class HomeFragment : BaseFragment() {
         }
 
     private fun addCollectArticle(id: Int, position: Int) {
-        addDisposable(RetrofitHelper.service.addCollectArticle(id)
-            .compose(RxUtil.ioMain())
-            .subscribeWith(object : BaseObserver<Any>() {
-                override fun onSuccess() {
-                    showToast(getString(R.string.collect_success))
-                    homeListAdapter.data[position].collect = true
-                    notifyItemChanged(position)
-                }
-                override fun onError(errorMsg: String) {
-                    showToast(errorMsg)
-                }
-            })
+        addDisposable(
+            RetrofitHelper.service.addCollectArticle(id)
+                .compose(RxUtil.ioMain())
+                .subscribeWith(object : BaseObserver<Any>() {
+                    override fun onSuccess() {
+                        showToast(getString(R.string.collect_success))
+                        homeListAdapter.data[position].collect = true
+                        notifyItemChanged(position)
+                    }
+
+                    override fun onError(errorMsg: String) {
+                        showToast(errorMsg)
+                    }
+                })
         )
     }
 
     private fun cancelCollectArticle(id: Int, position: Int) {
-        addDisposable(RetrofitHelper.service.cancelCollectArticle(id)
-            .compose(RxUtil.ioMain())
-            .subscribeWith(object : BaseObserver<Any>() {
-                override fun onSuccess() {
-                    showToast(getString(R.string.cancel_collect_success))
-                    homeListAdapter.data[position].collect = false
-                    notifyItemChanged(position)
-                }
+        addDisposable(
+            RetrofitHelper.service.cancelCollectArticle(id)
+                .compose(RxUtil.ioMain())
+                .subscribeWith(object : BaseObserver<Any>() {
+                    override fun onSuccess() {
+                        showToast(getString(R.string.cancel_collect_success))
+                        homeListAdapter.data[position].collect = false
+                        notifyItemChanged(position)
+                    }
 
-                override fun onError(errorMsg: String) {
-                    showToast(errorMsg)
-                }
-            })
+                    override fun onError(errorMsg: String) {
+                        showToast(errorMsg)
+                    }
+                })
         )
     }
+
     /**
      * 因为添加了一个banner头,所以 notifyItemChanged 时需要加上header的个数
      */
@@ -247,6 +245,20 @@ class HomeFragment : BaseFragment() {
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAppThemeChange(themeEvent: ThemeEvent) {
         homeListAdapter.notifyDataSetChanged()
+    }
+
+    private val mLayoutManager: LinearLayoutManager by lazy {
+        LinearLayoutManager(activity)
+    }
+
+    fun scrollToTop() {
+        recyclerView.run {
+            if (mLayoutManager.findFirstVisibleItemPosition() > 40) {
+                scrollToPosition(0)
+            } else {
+                smoothScrollToPosition(0)
+            }
+        }
     }
 
     override fun onStart() {

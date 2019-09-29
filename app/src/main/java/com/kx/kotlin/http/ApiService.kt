@@ -88,5 +88,13 @@ interface ApiService {
     @POST("lg/collect/{id}/json")
     fun addCollectArticle(@Path("id") id: Int): Observable<BaseResponse<Any>>
 
+    /**
+     * 获取知识体系
+     * http://www.wanandroid.com/tree/json
+     */
+    @GET("tree/json")
+    fun getKnowledgeTree(): Observable<BaseResponse<List<KnowledgeTreeBody>>>
+
+
 
 }

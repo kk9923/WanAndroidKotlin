@@ -10,12 +10,16 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.kx.kotlin"
-        minSdkVersion 17
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters 'armeabi' //, 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
     }
     //签名
     signingConfigs {
@@ -70,6 +74,17 @@ android {
             if (outputFile != null && outputFile.name.endsWith('.apk')) {
                 def fileName = "WanAndroid_v${defaultConfig.versionName}_(${defaultConfig.versionCode})_${releaseTime()}.apk"
                 outputFileName = fileName
+            }
+        }
+    }
+}
+// 强制指定版本
+configurations.all {
+    resolutionStrategy.eachDependency { DependencyResolveDetails details ->
+        def requested = details.requested
+        if (requested.group == 'com.android.support') {
+            if (!requested.name.startsWith("appcompat-v7")) {
+                details.useVersion "28.0.0"
             }
         }
     }

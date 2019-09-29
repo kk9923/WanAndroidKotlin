@@ -12,6 +12,9 @@
     <!-- 允许获取Wi-Fi网络状态改变信息 -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application
             android:name=".WanAndroidApplication"
             android:allowBackup="true"

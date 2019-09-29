@@ -38,6 +38,7 @@ data class ScoreResponseBody(
     val size: Int,
     val total: Int
 )
+
 data class MyCollectResponseBody(
     val curPage: Int,
     var datas: MutableList<CollectionArticle>,
@@ -118,26 +119,28 @@ data class Banner(
 //        @Json(name = "visible") val visible: Int
 //)
 //
-////知识体系
-//data class KnowledgeTreeBody(
-//        @Json(name = "children") val children: MutableList<Knowledge>,
-//        @Json(name = "courseId") val courseId: Int,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "name") val name: String,
-//        @Json(name = "order") val order: Int,
-//        @Json(name = "parentChapterId") val parentChapterId: Int,
-//        @Json(name = "visible") val visible: Int
-//) : Serializable
+//知识体系
+data class KnowledgeTreeBody(
+    val children: MutableList<Knowledge>,
+    val courseId: Int,
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val parentChapterId: Int,
+    val visible: Int
+)
+
 //
-//data class Knowledge(
-//        @Json(name = "children") val children: List<Any>,
-//        @Json(name = "courseId") val courseId: Int,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "name") val name: String,
-//        @Json(name = "order") val order: Int,
-//        @Json(name = "parentChapterId") val parentChapterId: Int,
-//        @Json(name = "visible") val visible: Int
-//) : Serializable
+data class Knowledge(
+    val children: List<Any>,
+    val courseId: Int,
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val parentChapterId: Int,
+    val visible: Int
+)
+
 //
 //// 登录数据
 data class LoginData(

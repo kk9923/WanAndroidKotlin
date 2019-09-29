@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.support.design.widget.AppBarLayout
 import android.support.design.widget.BottomNavigationView
 import android.support.design.widget.NavigationView
+import android.support.v4.app.FragmentTransaction
 import android.support.v4.view.GravityCompat
 import android.support.v4.view.MenuItemCompat
 import android.support.v7.app.ActionBarDrawerToggle
@@ -22,6 +23,7 @@ import com.kx.kotlin.bean.UserInfo
 import com.kx.kotlin.event.LoginEvent
 import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.fragment.HomeFragment
+import com.kx.kotlin.fragment.KnowledgeTreeFragment
 import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.theme.ThemeEvent
@@ -40,6 +42,18 @@ import org.jetbrains.anko.doAsync
 
 
 class MainActivity : BaseActivity(), View.OnClickListener {
+
+    private val BOTTOM_INDEX: String = "bottom_index"
+    private val FRAGMENT_HOME = 0
+    private val FRAGMENT_KNOWLEDGE = 1
+    private val FRAGMENT_WECHAT = 2
+    private val FRAGMENT_NAVIGATION = 3
+    private val FRAGMENT_PROJECT = 4
+
+    private var mHomeFragment: HomeFragment? = null
+    private var mKnowledgeTreeFragment: KnowledgeTreeFragment? = null
+
+    private var mIndex = FRAGMENT_HOME
 
     val context by lazy { this }
     private var nav_night_mode: TextView? = null
@@ -66,9 +80,16 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         initDrawerLayout()
         initBottomNavigation()
         initNavView()
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.add(R.id.container, HomeFragment.getInstance(), "home")
-        transaction.commit()
+
+        fab.run {
+            setOnClickListener(onFABClickListener)
+        }
+
+        if (savedInstanceState != null) {
+            mIndex = savedInstanceState.getInt(BOTTOM_INDEX)
+        }
+        showFragment(mIndex)
+
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this)
         }
@@ -102,12 +123,78 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             text = if (!isLogin) getString(R.string.go_login) else username
         }
     }
-
-    private fun goLogin() {
-        showToast(resources.getString(R.string.login_tint))
-        Intent(this@MainActivity, LoginActivity::class.java).run {
-            startActivity(this)
+    /**
+     * 展示Fragment
+     * @param index
+     */
+    private fun showFragment(index: Int) {
+        val transaction = supportFragmentManager.beginTransaction()
+        hideFragments(transaction)
+        mIndex = index
+        when (index) {
+            FRAGMENT_HOME // 首页
+            -> {
+                toolbar.title = getString(R.string.app_name)
+                if (mHomeFragment == null) {
+                    mHomeFragment = HomeFragment.getInstance()
+                    transaction.add(R.id.container, mHomeFragment!!, "home")
+                } else {
+                    transaction.show(mHomeFragment!!)
+                }
+            }
+            FRAGMENT_KNOWLEDGE // 知识体系
+            -> {
+                toolbar.title = getString(R.string.knowledge_system)
+                if (mKnowledgeTreeFragment == null) {
+                    mKnowledgeTreeFragment = KnowledgeTreeFragment.getInstance()
+                    transaction.add(R.id.container, mKnowledgeTreeFragment!!, "knowledge")
+                } else {
+                    transaction.show(mKnowledgeTreeFragment!!)
+                }
+            }
+            FRAGMENT_NAVIGATION // 导航
+            -> {
+//                toolbar.title = getString(R.string.navigation)
+//                if (mNavigationFragment == null) {
+//                    mNavigationFragment = NavigationFragment.getInstance()
+//                    transaction.add(R.id.container, mNavigationFragment!!, "navigation")
+//                } else {
+//                    transaction.show(mNavigationFragment!!)
+//                }
+            }
+            FRAGMENT_PROJECT // 项目
+            -> {
+//                toolbar.title = getString(R.string.project)
+//                if (mProjectFragment == null) {
+//                    mProjectFragment = ProjectFragment.getInstance()
+//                    transaction.add(R.id.container, mProjectFragment!!, "project")
+//                } else {
+//                    transaction.show(mProjectFragment!!)
+//                }
+            }
+            FRAGMENT_WECHAT // 公众号
+            -> {
+//                toolbar.title = getString(R.string.wechat)
+//                if (mWeChatFragment == null) {
+//                    mWeChatFragment = WeChatFragment.getInstance()
+//                    transaction.add(R.id.container, mWeChatFragment!!, "wechat")
+//                } else {
+//                    transaction.show(mWeChatFragment!!)
+//                }
+            }
         }
+        transaction.commit()
+    }
+
+    /**
+     * 隐藏所有的Fragment
+     */
+    private fun hideFragments(transaction: FragmentTransaction) {
+        mHomeFragment?.let { transaction.hide(it) }
+        mKnowledgeTreeFragment?.let { transaction.hide(it) }
+    //    mNavigationFragment?.let { transaction.hide(it) }
+    //    mProjectFragment?.let { transaction.hide(it) }
+    //    mWeChatFragment?.let { transaction.hide(it) }
     }
 
     /**
@@ -173,32 +260,37 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private fun initBottomNavigation() {
         bottom_navigation.run {
             labelVisibilityMode = 1
-            setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+//            setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
             setOnNavigationItemSelectedListener { item ->
                 when (item.itemId) {
                     R.id.action_home -> {
                         toolbar.title = getString(R.string.app_name)
                         setToolBarEnableScroll(false)
+                        showFragment(FRAGMENT_HOME)
                         true
                     }
                     R.id.action_knowledge_system -> {
                         toolbar.title = getString(R.string.knowledge_system)
                         setToolBarEnableScroll(false)
+                        showFragment(FRAGMENT_KNOWLEDGE)
                         true
                     }
                     R.id.action_wechat -> {
                         toolbar.title = getString(R.string.wechat)
                         setToolBarEnableScroll(true)
+                        showFragment(FRAGMENT_WECHAT)
                         true
                     }
                     R.id.action_navigation -> {
                         toolbar.title = getString(R.string.navigation)
                         setToolBarEnableScroll(false)
+                        showFragment(FRAGMENT_NAVIGATION)
                         true
                     }
                     R.id.action_project -> {
                         toolbar.title = getString(R.string.project)
                         setToolBarEnableScroll(true)
+                        showFragment(FRAGMENT_PROJECT)
                         true
                     }
                     else -> {
@@ -215,32 +307,36 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 R.id.action_home -> {
                     toolbar.title = getString(R.string.app_name)
                     setToolBarEnableScroll(false)
+                    showFragment(FRAGMENT_KNOWLEDGE)
                     true
                 }
                 R.id.action_knowledge_system -> {
                     toolbar.title = getString(R.string.knowledge_system)
                     setToolBarEnableScroll(false)
+                    showFragment(FRAGMENT_KNOWLEDGE)
                     true
                 }
                 R.id.action_wechat -> {
                     toolbar.title = getString(R.string.wechat)
                     setToolBarEnableScroll(true)
+                    showFragment(FRAGMENT_WECHAT)
                     true
                 }
                 R.id.action_navigation -> {
                     toolbar.title = getString(R.string.navigation)
                     setToolBarEnableScroll(false)
+                    showFragment(FRAGMENT_NAVIGATION)
                     true
                 }
                 R.id.action_project -> {
                     toolbar.title = getString(R.string.project)
                     setToolBarEnableScroll(true)
+                    showFragment(FRAGMENT_PROJECT)
                     true
                 }
                 else -> {
                     false
                 }
-
             }
         }
 
@@ -341,6 +437,29 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         builder.show()
     }
 
+    /**
+     * FAB 监听
+     */
+    private val onFABClickListener = View.OnClickListener {
+        when (mIndex) {
+            FRAGMENT_HOME -> {
+                mHomeFragment?.scrollToTop()
+            }
+            FRAGMENT_KNOWLEDGE -> {
+                mKnowledgeTreeFragment?.scrollToTop()
+            }
+            FRAGMENT_NAVIGATION -> {
+              //  mNavigationFragment?.scrollToTop()
+            }
+            FRAGMENT_PROJECT -> {
+             //   mProjectFragment?.scrollToTop()
+            }
+            FRAGMENT_WECHAT -> {
+             //   mWeChatFragment?.scrollToTop()
+            }
+        }
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onAppThemeChange(themeEvent: ThemeEvent) {
         bottom_navigation.setBackgroundColor(ResourceUtils.resolveData(context, R.attr.common_bg))
@@ -387,6 +506,13 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         )
     }
 
+    private fun goLogin() {
+        showToast(resources.getString(R.string.login_tint))
+        Intent(this@MainActivity, LoginActivity::class.java).run {
+            startActivity(this)
+        }
+    }
+
     private var lastPressTime : Long = 0
 
     override fun onBackPressed() {
@@ -401,6 +527,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             return
         }
         super.onBackPressed()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?) {
+        super.onSaveInstanceState(outState)
+        outState?.putInt(BOTTOM_INDEX, mIndex)
     }
 
     override fun onDestroy() {

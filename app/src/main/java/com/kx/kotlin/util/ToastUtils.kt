@@ -5,20 +5,29 @@ import android.widget.Toast
 
 class ToastUtils {
 
-    private var toast: Toast? = null
+    companion object{
 
-    constructor(context: Context?, message: String) : this(context, message, Toast.LENGTH_SHORT)
+        private var toast: Toast? = null
+        fun showShort(context: Context?, message: CharSequence) {
+            if (context == null) {
+                return
+            }
+            if (toast == null) {
+                toast = Toast.makeText(context, message, Toast.LENGTH_SHORT)
+            }
+            toast?.setText(message)
+            toast?.show()
+        }
 
-    constructor(context: Context?, message: String, duration: Int) {
-        if (toast == null){
-            toast = Toast.makeText(context,message,duration)
-        }else{
-            toast!!.setText(message)
+        fun showLong(context: Context?, message: CharSequence) {
+            if (context == null) {
+                return
+            }
+            if (toast == null) {
+                toast = Toast.makeText(context, message, Toast.LENGTH_LONG)
+            }
+            toast?.setText(message)
+            toast?.show()
         }
     }
-
-    fun show() {
-        toast?.show()
-    }
-
 }
