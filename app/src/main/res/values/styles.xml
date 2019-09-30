@@ -57,4 +57,8 @@
         <item name="android:layout_marginEnd">@dimen/dp_44</item>
     </style>
 
+    <style name="TabTextStyle" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+    </style>
+
 </resources>

@@ -1,13 +1,16 @@
 package com.kx.kotlin.fragment
 
+import android.content.Intent
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.KnowledgeTreeAdapter
 import com.kx.kotlin.base.BaseFragment
 import com.kx.kotlin.base.BaseObserver
 import com.kx.kotlin.bean.KnowledgeTreeBody
-import com.kx.kotlin.ext.showToast
+import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.http.RetrofitHelper
+import com.kx.kotlin.ui.KnowledgeActivity
 import com.kx.kotlin.util.RxUtil
 import kotlinx.android.synthetic.main.fragment_knowledge.*
 
@@ -23,6 +26,7 @@ class KnowledgeTreeFragment : BaseFragment() {
         recyclerView.run {
             adapter = mKnowledgeTreeAdapter
             layoutManager = mLayoutManager
+            addItemDecoration(mDividerItemDecoration)
         }
         refreshLayout.run {
             setOnRefreshListener {
@@ -31,8 +35,11 @@ class KnowledgeTreeFragment : BaseFragment() {
         }
         mKnowledgeTreeAdapter.run {
             setOnItemClickListener { _, _, position ->
-                val name = mKnowledgeTreeAdapter.data[position].name
-                showToast(name)
+                val data =mKnowledgeTreeAdapter.data[position]
+                Intent(activity, KnowledgeActivity::class.java).run {
+                    putExtra(Constant.CONTENT_DATA_KEY, data)
+                    startActivity(this)
+                }
             }
         }
         getKnowledgeTree()
@@ -62,6 +69,9 @@ class KnowledgeTreeFragment : BaseFragment() {
 
     private val mLayoutManager: LinearLayoutManager by lazy {
         LinearLayoutManager(activity)
+    }
+    private val mDividerItemDecoration: DividerItemDecoration by lazy {
+        DividerItemDecoration(activity,DividerItemDecoration.VERTICAL)
     }
 
      fun scrollToTop() {

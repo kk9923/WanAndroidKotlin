@@ -3,6 +3,7 @@ package com.kx.kotlin
 import android.app.Application
 import android.content.Context
 import com.kx.kotlin.theme.ThemeManager
+import com.kx.kotlin.util.ToastUtils
 import com.tencent.bugly.crashreport.CrashReport
 import kotlin.properties.Delegates
 
@@ -27,5 +28,6 @@ class WanAndroidApplication : Application() {
         context = applicationContext
         ThemeManager.init(context)
         CrashReport.initCrashReport(applicationContext, "d0f1d62e02", true)
+        ToastUtils.init(instance)
     }
 }

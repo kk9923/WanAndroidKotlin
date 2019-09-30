@@ -5,10 +5,17 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.kx.kotlin.constant.Constant
+import com.kx.kotlin.util.SPUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-open abstract  class BaseFragment : Fragment() {
+abstract  class BaseFragment : Fragment() {
+
+    /**
+     * check login
+     */
+    protected var isLogin: Boolean by SPUtils(Constant.LOGIN_KEY, false)
 
     var mCompositeDisposable: CompositeDisposable? = null
 

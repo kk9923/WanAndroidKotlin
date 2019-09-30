@@ -95,6 +95,12 @@ interface ApiService {
     @GET("tree/json")
     fun getKnowledgeTree(): Observable<BaseResponse<List<KnowledgeTreeBody>>>
 
+    /**
+     * 知识体系下的文章
+     * http://www.wanandroid.com/article/list/0/json?cid=168
+     */
+    @GET("article/list/{page}/json")
+    fun getKnowledgeList(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleResponseBody>>
 
 
 }

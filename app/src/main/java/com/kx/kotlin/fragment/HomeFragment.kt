@@ -22,9 +22,6 @@ import com.kx.kotlin.ui.ArticlesDetailActivity
 import com.kx.kotlin.util.RxUtil
 import com.kx.kotlin.util.RxUtils
 import com.kx.kotlin.widget.GlideImageLoader
-import com.scwang.smartrefresh.layout.api.RefreshLayout
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener
 import com.youth.banner.BannerConfig
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
@@ -75,16 +72,12 @@ class HomeFragment : BaseFragment() {
             onItemChildClickListener = this@HomeFragment.onItemChildClickListener
         }
         refreshLayout.run {
-            setOnRefreshListener(object : OnRefreshListener {
-                override fun onRefresh(refreshLayout: RefreshLayout) {
-                    onRefresh()
-                }
-            })
-            setOnLoadMoreListener(object : OnLoadMoreListener {
-                override fun onLoadMore(refreshLayout: RefreshLayout) {
-                    loadMore()
-                }
-            })
+            setOnRefreshListener {
+                onRefresh()
+            }
+            setOnLoadMoreListener {
+                loadMore()
+            }
         }
         refreshLayout.autoRefresh()
     }
@@ -171,7 +164,9 @@ class HomeFragment : BaseFragment() {
     private val onItemClickListener = object : OnItemClickListener {
         override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
             val itemData = homeListAdapter.data[position]
-            ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
+          //  ToastUtils.makeText(activity,itemData.title,0).show()
+            showToast(itemData.title)
+          //  ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
         }
     }
 

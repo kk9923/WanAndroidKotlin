@@ -1,5 +1,7 @@
 package com.kx.kotlin.bean
 
+import java.io.Serializable
+
 
 //data class HttpResult<T>(@Json(name = "data") val data: T,
 //                         @Json(name = "errorCode") val errorCode: Int,
@@ -128,7 +130,7 @@ data class KnowledgeTreeBody(
     val order: Int,
     val parentChapterId: Int,
     val visible: Int
-)
+) : Serializable
 
 //
 data class Knowledge(
@@ -139,7 +141,7 @@ data class Knowledge(
     val order: Int,
     val parentChapterId: Int,
     val visible: Int
-)
+) :Serializable
 
 //
 //// 登录数据
