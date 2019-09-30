@@ -161,14 +161,11 @@ class HomeFragment : BaseFragment() {
         HomeListAdapter(activity)
     }
 
-    private val onItemClickListener = object : OnItemClickListener {
-        override fun onItemClick(adapter: BaseQuickAdapter<*, *>?, view: View?, position: Int) {
+    private val onItemClickListener =
+        OnItemClickListener { _, _, position ->
             val itemData = homeListAdapter.data[position]
-          //  ToastUtils.makeText(activity,itemData.title,0).show()
-            showToast(itemData.title)
-          //  ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
+            ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
         }
-    }
 
     private val onItemChildClickListener =
         BaseQuickAdapter.OnItemChildClickListener { _, view, position ->
