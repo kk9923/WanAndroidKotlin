@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment
 import com.kx.kotlin.util.ToastUtils
 
 fun Context.showToast(content: String) {
-    ToastUtils.showShort(this, content)
+    ToastUtils.showShort(this, content).show()
 }
 
 fun Fragment.showToast(content: String){
-    ToastUtils.showShort(this.activity?.applicationContext, content)
+    ToastUtils.showShort(this.activity?.applicationContext, content).show()
 }

@@ -17,6 +17,7 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.kx.kotlin.R
+import com.kx.kotlin.WanAndroidApplication.Companion.context
 import com.kx.kotlin.base.BaseActivity
 import com.kx.kotlin.base.BaseObserver
 import com.kx.kotlin.bean.UserInfo
@@ -24,6 +25,8 @@ import com.kx.kotlin.event.LoginEvent
 import com.kx.kotlin.ext.showToast
 import com.kx.kotlin.fragment.HomeFragment
 import com.kx.kotlin.fragment.KnowledgeTreeFragment
+import com.kx.kotlin.fragment.ProjectFragment
+import com.kx.kotlin.fragment.WeChatFragment
 import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.theme.ThemeEvent
@@ -52,10 +55,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
 
     private var mHomeFragment: HomeFragment? = null
     private var mKnowledgeTreeFragment: KnowledgeTreeFragment? = null
+    private var mWeChatFragment: WeChatFragment? = null
+    private var mProjectFragment: ProjectFragment? = null
 
     private var mIndex = FRAGMENT_HOME
 
-    val context by lazy { this }
     private var nav_night_mode: TextView? = null
     private var nav_night_mode_menu: MenuItem? = null
     private var nav_view_header: LinearLayout? = null
@@ -134,7 +138,6 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         when (index) {
             FRAGMENT_HOME // 首页
             -> {
-                toolbar.title = getString(R.string.app_name)
                 if (mHomeFragment == null) {
                     mHomeFragment = HomeFragment.getInstance()
                     transaction.add(R.id.container, mHomeFragment!!, "home")
@@ -144,12 +147,20 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
             FRAGMENT_KNOWLEDGE // 知识体系
             -> {
-                toolbar.title = getString(R.string.knowledge_system)
                 if (mKnowledgeTreeFragment == null) {
                     mKnowledgeTreeFragment = KnowledgeTreeFragment.getInstance()
                     transaction.add(R.id.container, mKnowledgeTreeFragment!!, "knowledge")
                 } else {
                     transaction.show(mKnowledgeTreeFragment!!)
+                }
+            }
+            FRAGMENT_WECHAT // 公众号
+            -> {
+                if (mWeChatFragment == null) {
+                    mWeChatFragment = WeChatFragment.getInstance()
+                    transaction.add(R.id.container, mWeChatFragment!!, "wechat")
+                } else {
+                    transaction.show(mWeChatFragment!!)
                 }
             }
             FRAGMENT_NAVIGATION // 导航
@@ -164,23 +175,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
             }
             FRAGMENT_PROJECT // 项目
             -> {
-//                toolbar.title = getString(R.string.project)
-//                if (mProjectFragment == null) {
-//                    mProjectFragment = ProjectFragment.getInstance()
-//                    transaction.add(R.id.container, mProjectFragment!!, "project")
-//                } else {
-//                    transaction.show(mProjectFragment!!)
-//                }
-            }
-            FRAGMENT_WECHAT // 公众号
-            -> {
-//                toolbar.title = getString(R.string.wechat)
-//                if (mWeChatFragment == null) {
-//                    mWeChatFragment = WeChatFragment.getInstance()
-//                    transaction.add(R.id.container, mWeChatFragment!!, "wechat")
-//                } else {
-//                    transaction.show(mWeChatFragment!!)
-//                }
+                if (mProjectFragment == null) {
+                    mProjectFragment = ProjectFragment.getInstance()
+                    transaction.add(R.id.container, mProjectFragment!!, "project")
+                } else {
+                    transaction.show(mProjectFragment!!)
+                }
             }
         }
         transaction.commit()
@@ -192,9 +192,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     private fun hideFragments(transaction: FragmentTransaction) {
         mHomeFragment?.let { transaction.hide(it) }
         mKnowledgeTreeFragment?.let { transaction.hide(it) }
+        mWeChatFragment?.let { transaction.hide(it) }
     //    mNavigationFragment?.let { transaction.hide(it) }
-    //    mProjectFragment?.let { transaction.hide(it) }
-    //    mWeChatFragment?.let { transaction.hide(it) }
+        mProjectFragment?.let { transaction.hide(it) }
     }
 
     /**
@@ -234,7 +234,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 }
                 R.id.nav_night_mode -> {
                     ThemeManager.changeTheme(context)
-                    ThemeUtils.startThemeChangeRevealAnimation(context, nav_night_mode)
+                    ThemeUtils.startThemeChangeRevealAnimation(mActivity, nav_night_mode)
                 }
                 R.id.nav_setting -> {
 //                    Intent(this@MainActivity, SettingActivity::class.java).run {
@@ -452,10 +452,10 @@ class MainActivity : BaseActivity(), View.OnClickListener {
               //  mNavigationFragment?.scrollToTop()
             }
             FRAGMENT_PROJECT -> {
-             //   mProjectFragment?.scrollToTop()
+                mProjectFragment?.scrollToTop()
             }
             FRAGMENT_WECHAT -> {
-             //   mWeChatFragment?.scrollToTop()
+                mWeChatFragment?.scrollToTop()
             }
         }
     }

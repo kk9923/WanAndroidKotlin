@@ -103,4 +103,26 @@ interface ApiService {
     fun getKnowledgeList(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleResponseBody>>
 
 
+    /**
+     * 获取公众号列表
+     * http://wanandroid.com/wxarticle/chapters/json
+     */
+    @GET("/wxarticle/chapters/json")
+    fun getWXChapters(): Observable<BaseResponse<MutableList<WXChapterBean>>>
+
+    /**
+     * 项目数据
+     * http://www.wanandroid.com/project/tree/json
+     */
+    @GET("project/tree/json")
+    fun getProjectTree(): Observable<BaseResponse<List<ProjectTreeBean>>>
+
+    /**
+     * 项目列表数据
+     * http://www.wanandroid.com/project/list/1/json?cid=294
+     */
+    @GET("project/list/{page}/json")
+    fun getProjectList(@Path("page") page: Int, @Query("cid") cid: Int): Observable<BaseResponse<ArticleResponseBody>>
+
+
 }

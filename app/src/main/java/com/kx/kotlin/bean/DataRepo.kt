@@ -141,7 +141,7 @@ data class Knowledge(
     val order: Int,
     val parentChapterId: Int,
     val visible: Int
-) :Serializable
+) : Serializable
 
 //
 //// 登录数据
@@ -198,15 +198,16 @@ data class CollectionArticle(
 //)
 //
 //// 项目
-//data class ProjectTreeBean(
-//        @Json(name = "children") val children: List<Any>,
-//        @Json(name = "courseId") val courseId: Int,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "name") val name: String,
-//        @Json(name = "order") val order: Int,
-//        @Json(name = "parentChapterId") val parentChapterId: Int,
-//        @Json(name = "visible") val visible: Int
-//)
+data class ProjectTreeBean(
+    val children: List<Any>,
+    val courseId: Int,
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val parentChapterId: Int,
+    val visible: Int
+)
+
 //
 //// 热门搜索
 //data class HotSearchBean(
@@ -284,16 +285,17 @@ data class CollectionArticle(
 //)
 //
 //// 公众号列表实体
-//data class WXChapterBean(
-//        @Json(name = "children") val children: MutableList<String>,
-//        @Json(name = "courseId") val courseId: Int,
-//        @Json(name = "id") val id: Int,
-//        @Json(name = "name") val name: String,
-//        @Json(name = "order") val order: Int,
-//        @Json(name = "parentChapterId") val parentChapterId: Int,
-//        @Json(name = "userControlSetTop") val userControlSetTop: Boolean,
-//        @Json(name = "visible") val visible: Int
-//)
+data class WXChapterBean(
+    val children: MutableList<String>,
+    val courseId: Int,
+    val id: Int,
+    val name: String,
+    val order: Int,
+    val parentChapterId: Int,
+    val userControlSetTop: Boolean,
+    val visible: Int
+)
+
 //
 //// 用户个人信息
 data class UserInfo(
