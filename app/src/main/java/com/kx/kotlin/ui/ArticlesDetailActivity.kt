@@ -7,6 +7,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +21,8 @@ import com.kx.kotlin.http.RetrofitHelper
 import com.kx.kotlin.util.RxUtil
 import kotlinx.android.synthetic.main.activity_articles_detail.*
 import kotlinx.android.synthetic.main.toolbar.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 class ArticlesDetailActivity : BaseActivity() {
 
@@ -83,11 +86,18 @@ class ArticlesDetailActivity : BaseActivity() {
         override fun shouldOverrideUrlLoading(view: WebView?, request: WebResourceRequest?): Boolean {
             val url = request?.url.toString()
             try {
+                //  拦截 H5 页面的恶意跳转
                 if (url.startsWith("http:") || url.startsWith("https:")) {
                     view?.loadUrl(url)
                 } else {
-                    val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
-                    startActivity(intent)
+                    val host =  getHost(shareUrl)
+                    return false
+//                    if (!TextUtils.isEmpty(host) && url.contains(host)){
+//                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
+//                        startActivity(intent)
+//                    }else{
+//                        return false
+//                    }
                 }
                 return true
             } catch (e: Exception) {
@@ -195,5 +205,18 @@ class ArticlesDetailActivity : BaseActivity() {
                     }
                 })
         )
+    }
+
+    /**
+     * 正则获取url的Host
+     *  eg.   https://www.jianshu.com/p/2c106b682cfb?utm_source=desktop&amp;utm_medium=timeline   返回  www.jianshu.com
+     */
+    fun  getHost(url : String ): String {
+        val pattern = Pattern.compile("^http[s]?:\\/\\/(.*?)([:\\/]|$)")// 匹配的模式
+        val matcher = pattern.matcher(url)
+        while (matcher.find()) {
+            return matcher.group(1)
+        }
+        return ""
     }
 }
