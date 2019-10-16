@@ -36,6 +36,7 @@
     <string name="nav_id">ID:</string>
     <string name="nav_grade">等级:</string>
     <string name="nav_rank">排名:</string>
+    <string name="nav_coroutine">协程</string>
 
     <string name="score">积分</string>
     <string name="score_detail">积分明细</string>

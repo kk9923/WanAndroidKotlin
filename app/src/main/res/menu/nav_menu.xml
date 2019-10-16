@@ -34,6 +34,10 @@
             android:id="@+id/nav_about_us"
             android:icon="@drawable/ic_about_us_white_24dp"
             android:title="@string/nav_about_us" />
+        <item
+                android:id="@+id/nav_coroutine"
+                android:icon="@drawable/ic_about_us_white_24dp"
+                android:title="@string/nav_coroutine" />
 
         <item
             android:id="@+id/nav_logout"

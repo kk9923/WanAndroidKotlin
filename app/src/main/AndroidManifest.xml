@@ -42,6 +42,10 @@
         </activity>
         <activity android:name=".ui.KnowledgeActivity">
         </activity>
+        <activity android:name=".TestActivity"
+        android:label="@string/nav_coroutine"
+        >
+        </activity>
     </application>
 
 </manifest>

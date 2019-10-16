@@ -17,6 +17,7 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.kx.kotlin.R
+import com.kx.kotlin.TestActivity
 import com.kx.kotlin.WanAndroidApplication.Companion.context
 import com.kx.kotlin.base.BaseActivity
 import com.kx.kotlin.base.BaseObserver
@@ -251,6 +252,11 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                 }
                 R.id.nav_logout -> {
                      logout()
+                }
+                R.id.nav_coroutine -> {
+                    Intent(this@MainActivity, TestActivity::class.java).run {
+                        startActivity(this)
+                    }
                 }
             }
             // drawer_layout.closeDrawer(GravityCompat.START)
