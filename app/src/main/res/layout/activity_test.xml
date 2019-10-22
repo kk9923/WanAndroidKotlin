@@ -6,11 +6,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:context=".TestActivity">
+        tools:context=".reflex.TestActivity">
 
     <ImageView
             android:id="@+id/imageView"
             android:layout_width="@dimen/dp_200"
             android:layout_height="@dimen/dp_200"/>
+
+    <Button
+            android:text="hook"
+            android:id="@+id/hook"
+            android:textAllCaps="false"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

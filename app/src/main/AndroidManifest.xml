@@ -42,10 +42,13 @@
         </activity>
         <activity android:name=".ui.KnowledgeActivity">
         </activity>
-        <activity android:name=".TestActivity"
-        android:label="@string/nav_coroutine"
-        >
+        <activity
+                android:name=".reflex.TestActivity"
+                android:label="@string/nav_coroutine">
         </activity>
+        <activity android:name=".reflex.ReflexActivity">
+        </activity>
+        <activity android:name=".reflex.DemoA"/>
     </application>
 
 </manifest>

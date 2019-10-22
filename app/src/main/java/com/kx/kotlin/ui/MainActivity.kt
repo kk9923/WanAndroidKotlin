@@ -17,7 +17,7 @@ import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.kx.kotlin.R
-import com.kx.kotlin.TestActivity
+import com.kx.kotlin.reflex.TestActivity
 import com.kx.kotlin.WanAndroidApplication.Companion.context
 import com.kx.kotlin.base.BaseActivity
 import com.kx.kotlin.base.BaseObserver
