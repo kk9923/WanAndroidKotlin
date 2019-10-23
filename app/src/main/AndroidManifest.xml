@@ -49,6 +49,8 @@
         <activity android:name=".reflex.ReflexActivity">
         </activity>
         <activity android:name=".reflex.DemoA"/>
+        <activity android:name=".reflex.Main2Activity">
+        </activity>
     </application>
 
 </manifest>
