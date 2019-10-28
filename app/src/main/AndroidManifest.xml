@@ -46,8 +46,7 @@
                 android:name=".reflex.TestActivity"
                 android:label="@string/nav_coroutine">
         </activity>
-        <activity android:name=".reflex.ReflexActivity">
-        </activity>
+        <!--<activity android:name=".reflex.ReflexActivity"/>-->
         <activity android:name=".reflex.DemoA"/>
         <activity android:name=".reflex.Main2Activity">
         </activity>

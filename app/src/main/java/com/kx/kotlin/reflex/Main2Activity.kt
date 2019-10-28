@@ -2,6 +2,7 @@ package com.kx.kotlin.reflex
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.kx.kotlin.R
 
 class Main2Activity : AppCompatActivity() {
 

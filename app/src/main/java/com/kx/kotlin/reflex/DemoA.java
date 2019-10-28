@@ -32,7 +32,7 @@ public class DemoA extends Activity {
         MyInstrumentation instrumentation1 = new MyInstrumentation(instrumentation);
         Reflex.setFieldObject(Activity.class, this, "mInstrumentation", instrumentation1);
 
-        hookHandler2();
+        hookActivityManager();
 
         findViewById(R.id.hook).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,9 +42,33 @@ public class DemoA extends Activity {
                 startActivity(intent);
             }
         });
+
+        hookActivityThread();
+
     }
 
-    private void hookHandler1() {
+    private void hookActivityThread() {
+        Class activityThreadClass = null;
+        try {
+            activityThreadClass = Class.forName("android.app.ActivityThread");
+            Field sCurrentActivityThreadField = activityThreadClass.getDeclaredField("sCurrentActivityThread");
+            sCurrentActivityThreadField.setAccessible(true);
+            Object activityThread = sCurrentActivityThreadField.get(null);
+
+            Field declaredField = activityThreadClass.getDeclaredField("mH");
+            declaredField.setAccessible(true);
+            Handler handler = (Handler) declaredField.get(activityThread);
+
+            Field mCallbackField = Handler.class.getDeclaredField("mCallback");
+            mCallbackField.setAccessible(true);
+            mCallbackField.set(handler, new HookHandlerCallback(handler));
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("hook handleMessage  " + e.toString());
+        }
+    }
+
+    private void hookActivityManager() {
         try {
             Class classActivityManager = Class.forName("android.app.ActivityManager");
             Field iActivityManagerSingleton = classActivityManager.getDeclaredField("IActivityManagerSingleton");
@@ -58,13 +82,10 @@ public class DemoA extends Activity {
             //  得到IActivityManagerSingleton中 mInstance 字段 --- 此时是 IActivityManager 接口
             Object mInstance = mInstanceSingleton.get(gDefault);
 
-            //  动态代理,创建IActivityManager 代理接口
             Class<?> classInterface = Class.forName("android.app.IActivityManager");
             Object proxy = Proxy.newProxyInstance(classInterface.getClassLoader(),
                     new Class<?>[]{classInterface}, new AMNInvocationHandler(mInstance));
-
-            //  替换IActivityManagerSingleton中的mInstance为我们创建的代理接口
-            Reflex.setFieldObject("android.util.Singleton", gDefault, "mInstance", proxy);
+            mInstanceSingleton.set(gDefault, proxy);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -74,10 +95,7 @@ public class DemoA extends Activity {
 
     private void hookHandler2() {
         try {
-
             Class classActivityManager = Class.forName("android.app.ActivityManager");
-
-
             Method getService = classActivityManager.getDeclaredMethod("getService", new Class[]{});
             Object invoke = getService.invoke(null, null);
 
@@ -91,12 +109,52 @@ public class DemoA extends Activity {
                     new Class<?>[]{classInterface}, new AMNInvocationHandler(invoke));
 
             Reflex.setFieldObject("android.util.Singleton", gDefault, "mInstance", proxy);
-
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("hook2失败 " + e.toString());
         }
     }
+
+    private class HookHandlerCallback implements Handler.Callback {
+
+        Handler handler;
+
+        public HookHandlerCallback(Handler handler) {
+            this.handler = handler;
+        }
+
+        @Override
+        public boolean handleMessage(Message msg) {
+            System.out.println("hook handleMessage  " + msg.what);
+            switch (msg.what) {
+                case 100:
+                    handleLaunchActivity(msg);
+                    break;
+                default:
+                    break;
+
+            }
+            handler.handleMessage(msg);
+            return true;
+        }
+
+        private void handleLaunchActivity(Message msg) {
+            Object obj = msg.obj;
+            try {
+
+                Class activityThread$ActivityClientRecordClass = Class.forName("android.app.ActivityThread$ActivityClientRecord");
+                Field intentField = activityThread$ActivityClientRecordClass.getDeclaredField("intent");
+                intentField.setAccessible(true);
+                Intent intent = (Intent) intentField.get(obj);
+                Intent targetIntent = intent.getParcelableExtra("AmsHook");
+                intent.setComponent(targetIntent.getComponent());
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("hook handleLaunchActivity  " +e.toString());
+            }
+        }
+    }
+
 
     public class AMNInvocationHandler implements InvocationHandler {
 
@@ -115,23 +173,22 @@ public class DemoA extends Activity {
             if (method.getName().equals(actionName)) {
                 Intent intent = null;
                 int index = 0;
-                for (int i = 0;i<args.length;i++){
-                    if (args[i] instanceof Intent){
+                for (int i = 0; i < args.length; i++) {
+                    if (args[i] instanceof Intent) {
                         intent = (Intent) args[i];
                         index = i;
                         break;
                     }
                 }
-                Log.d("---", "啦啦啦我是hook AMN进来的");
+                Log.d("---", "啦啦啦我是hook AMN  1进来的");
                 Log.d("---", intent.getStringExtra("hook"));
                 String packageName = intent.getComponent().getPackageName();
-                Intent newIntent = new Intent();
-                ComponentName componentName = new ComponentName(packageName,Main2Activity.class.getName());
+                Intent newIntent = (Intent) intent.clone();
+                ComponentName componentName = new ComponentName(packageName, Main2Activity.class.getName());
                 newIntent.setComponent(componentName);
+                newIntent.putExtra("AmsHook", intent);
                 args[index] = newIntent;
-                return null;
             }
-
             return method.invoke(target, args);
         }
 
