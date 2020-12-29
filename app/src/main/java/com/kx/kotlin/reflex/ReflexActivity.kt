@@ -1,6 +1,6 @@
 package com.kx.kotlin.reflex
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.kx.kotlin.R
 import kotlinx.android.synthetic.main.activity_reflex.*

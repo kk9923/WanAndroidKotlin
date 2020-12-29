@@ -1,7 +1,7 @@
 package com.kx.kotlin.ui
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
+import androidx.recyclerview.widget.DividerItemDecoration
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.MyCollectAdapter
@@ -128,7 +128,10 @@ class MyCollectActivity : BaseActivity() {
 
     private val recyclerViewItemDecoration by lazy {
 //        SpaceItemDecoration(mActivity)
-        DividerItemDecoration(mActivity,DividerItemDecoration.VERTICAL)
+        androidx.recyclerview.widget.DividerItemDecoration(
+            mActivity,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
     }
 
 

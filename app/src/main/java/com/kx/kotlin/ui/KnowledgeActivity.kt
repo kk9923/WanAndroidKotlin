@@ -1,7 +1,7 @@
 package com.kx.kotlin.ui
 
 import android.os.Bundle
-import android.support.design.widget.TabLayout
+import com.google.android.material.tabs.TabLayout
 import android.view.View
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.KnowledgePagerAdapter

@@ -1,6 +1,6 @@
 package com.kx.kotlin.base
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.MenuItem
 import com.kx.kotlin.constant.Constant
 import com.kx.kotlin.util.SPUtils

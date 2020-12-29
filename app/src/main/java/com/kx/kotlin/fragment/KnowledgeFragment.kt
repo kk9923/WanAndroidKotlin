@@ -2,9 +2,9 @@ package com.kx.kotlin.fragment
 
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.widget.DefaultItemAnimator
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.kx.kotlin.R
@@ -56,8 +56,13 @@ class KnowledgeFragment : BaseFragment() {
         recyclerView.run {
             layoutManager = linearLayoutManager
             adapter = knowledgeAdapter
-            itemAnimator = DefaultItemAnimator()
-            addItemDecoration(DividerItemDecoration(activity, DividerItemDecoration.VERTICAL))
+            itemAnimator = androidx.recyclerview.widget.DefaultItemAnimator()
+            addItemDecoration(
+                androidx.recyclerview.widget.DividerItemDecoration(
+                    activity,
+                    androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+                )
+            )
         }
         knowledgeAdapter.run {
                onItemClickListener = this@KnowledgeFragment.onItemClickListener
@@ -168,8 +173,8 @@ class KnowledgeFragment : BaseFragment() {
         knowledgeAdapter.notifyItemChanged(position )
     }
 
-    private val linearLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(activity)
+    private val linearLayoutManager: androidx.recyclerview.widget.LinearLayoutManager by lazy {
+        androidx.recyclerview.widget.LinearLayoutManager(activity)
     }
 
     private val knowledgeAdapter: KnowledgeAdapter by lazy {

@@ -1,8 +1,8 @@
 package com.kx.kotlin.fragment
 
 import android.content.Intent
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.KnowledgeTreeAdapter
 import com.kx.kotlin.base.BaseFragment
@@ -67,11 +67,14 @@ class KnowledgeTreeFragment : BaseFragment() {
         KnowledgeTreeAdapter(activity)
     }
 
-    private val mLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(activity)
+    private val mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager by lazy {
+        androidx.recyclerview.widget.LinearLayoutManager(activity)
     }
-    private val mDividerItemDecoration: DividerItemDecoration by lazy {
-        DividerItemDecoration(activity,DividerItemDecoration.VERTICAL)
+    private val mDividerItemDecoration: androidx.recyclerview.widget.DividerItemDecoration by lazy {
+        androidx.recyclerview.widget.DividerItemDecoration(
+            activity,
+            androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+        )
     }
 
      fun scrollToTop() {

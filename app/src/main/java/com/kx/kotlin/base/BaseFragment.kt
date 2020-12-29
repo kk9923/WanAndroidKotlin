@@ -1,7 +1,7 @@
 package com.kx.kotlin.base
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,7 +10,7 @@ import com.kx.kotlin.util.SPUtils
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
-abstract  class BaseFragment : Fragment() {
+abstract  class BaseFragment : androidx.fragment.app.Fragment() {
 
     /**
      * check login

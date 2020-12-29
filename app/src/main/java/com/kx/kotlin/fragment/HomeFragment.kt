@@ -1,8 +1,8 @@
 package com.kx.kotlin.fragment
 
 import android.os.Bundle
-import android.support.v7.widget.DividerItemDecoration
-import android.support.v7.widget.LinearLayoutManager
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -154,7 +154,10 @@ class HomeFragment : BaseFragment() {
     private val recyclerViewItemDecoration by lazy {
         activity?.let {
             //    SpaceItemDecoration(it)
-            DividerItemDecoration(activity, DividerItemDecoration.VERTICAL)
+            androidx.recyclerview.widget.DividerItemDecoration(
+                activity,
+                androidx.recyclerview.widget.DividerItemDecoration.VERTICAL
+            )
         }
     }
     private val homeListAdapter: HomeListAdapter by lazy {
@@ -239,8 +242,8 @@ class HomeFragment : BaseFragment() {
         homeListAdapter.notifyDataSetChanged()
     }
 
-    private val mLayoutManager: LinearLayoutManager by lazy {
-        LinearLayoutManager(activity)
+    private val mLayoutManager: androidx.recyclerview.widget.LinearLayoutManager by lazy {
+        androidx.recyclerview.widget.LinearLayoutManager(activity)
     }
 
     fun scrollToTop() {

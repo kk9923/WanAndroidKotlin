@@ -1,7 +1,7 @@
 package com.kx.kotlin.ui
 
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
+import com.google.android.material.appbar.AppBarLayout
 import com.kx.kotlin.R
 import com.kx.kotlin.adapter.ScoreAdapter
 import com.kx.kotlin.base.BaseActivity

@@ -1,13 +1,13 @@
 package com.kx.kotlin.ext
 
 import android.content.Context
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import com.kx.kotlin.util.ToastUtils
 
 fun Context.showToast(content: String) {
     ToastUtils.showShort(this, content).show()
 }
 
-fun Fragment.showToast(content: String){
+fun androidx.fragment.app.Fragment.showToast(content: String){
     ToastUtils.showShort(this.activity?.applicationContext, content).show()
 }

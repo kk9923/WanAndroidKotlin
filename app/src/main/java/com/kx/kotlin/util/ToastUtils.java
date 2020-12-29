@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Looper;
 import android.os.Message;
-import android.support.v4.app.NotificationManagerCompat;
+import androidx.core.app.NotificationManagerCompat;
 import android.util.SparseArray;
 import android.view.View;
 import android.view.View.OnAttachStateChangeListener;

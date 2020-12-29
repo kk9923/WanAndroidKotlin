@@ -2,7 +2,7 @@ package com.kx.kotlin.theme;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.support.v4.content.res.ResourcesCompat;
+import androidx.core.content.res.ResourcesCompat;
 import android.util.TypedValue;
 
 public class ResourceUtils {

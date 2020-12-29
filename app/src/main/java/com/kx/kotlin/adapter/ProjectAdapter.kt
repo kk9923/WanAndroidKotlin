@@ -13,7 +13,6 @@ class ProjectAdapter(private val context: Context?) : BaseQuickAdapter<Article, 
     override fun convert(helper: BaseViewHolder?, item: Article?) {
         helper ?: return
         item ?: return
-        println("  ProjectAdapter   " + helper.adapterPosition + "  ---  ${item.collect} " )
         helper.setText(R.id.item_project_list_title_tv, Html.fromHtml(item.title))
                 .setText(R.id.item_project_list_content_tv, Html.fromHtml(item.desc))
                 .setText(R.id.item_project_list_time_tv, item.niceDate)

@@ -5,14 +5,14 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.support.design.widget.AppBarLayout
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.NavigationView
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.view.GravityCompat
-import android.support.v4.view.MenuItemCompat
-import android.support.v7.app.ActionBarDrawerToggle
-import android.support.v7.app.AlertDialog
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
+import androidx.fragment.app.FragmentTransaction
+import androidx.core.view.GravityCompat
+import androidx.core.view.MenuItemCompat
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AlertDialog
 import android.view.*
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -190,7 +190,7 @@ class MainActivity : BaseActivity(), View.OnClickListener {
     /**
      * 隐藏所有的Fragment
      */
-    private fun hideFragments(transaction: FragmentTransaction) {
+    private fun hideFragments(transaction: androidx.fragment.app.FragmentTransaction) {
         mHomeFragment?.let { transaction.hide(it) }
         mKnowledgeTreeFragment?.let { transaction.hide(it) }
         mWeChatFragment?.let { transaction.hide(it) }
