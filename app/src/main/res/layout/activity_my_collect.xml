@@ -10,7 +10,7 @@
 
     <include layout="@layout/toolbar"/>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
             android:id="@+id/refreshLayout"
             app:srlAccentColor="@android:color/white"
             app:srlPrimaryColor="@color/colorPrimary"
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        <com.scwang.smart.refresh.header.ClassicsHeader
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -30,12 +30,12 @@
                 android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
-        <com.scwang.smartrefresh.layout.footer.ClassicsFooter
+        <com.scwang.smart.refresh.footer.ClassicsFooter
                 app:srlClassicsSpinnerStyle="Translate"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"/>
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
 
 </LinearLayout>

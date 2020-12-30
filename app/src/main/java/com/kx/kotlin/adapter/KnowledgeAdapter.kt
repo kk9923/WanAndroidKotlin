@@ -14,7 +14,7 @@ import com.kx.kotlin.util.ImageLoader
 class KnowledgeAdapter(private val context: Context?)
     : BaseQuickAdapter<Article, BaseViewHolder>(R.layout.item_knowledge_list) {
 
-    override fun convert(helper: BaseViewHolder?, item: Article?) {
+    override fun convert(helper: BaseViewHolder, item: Article?) {
         item ?: return
         helper ?: return
         helper.setText(R.id.tv_article_title, Html.fromHtml(item.title))

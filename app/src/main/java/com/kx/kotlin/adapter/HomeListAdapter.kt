@@ -12,16 +12,15 @@ import com.kx.kotlin.bean.Article
 import com.kx.kotlin.theme.ResourceUtils
 import com.kx.kotlin.util.ImageLoader
 
-class HomeListAdapter(private val context: Context?)
-    : BaseQuickAdapter<Article, BaseViewHolder>(R.layout.item_home_list) {
-    override fun convert(helper: BaseViewHolder?, item: Article?) {
+class HomeListAdapter(private val context: Context?) : BaseQuickAdapter<Article, BaseViewHolder>(R.layout.item_home_list) {
+    override fun convert(helper: BaseViewHolder, item: Article?) {
         item ?: return
-        helper ?: return
         helper.setBackgroundColor(R.id.rl_bg, ResourceUtils.resolveData(mContext, R.attr.common_bg))
         helper.setText(R.id.tv_article_title, Html.fromHtml(item.title))
             .setText(R.id.tv_article_author, item.author)
             .setText(R.id.tv_article_date, item.niceDate)
-            .setImageResource(R.id.iv_like,
+            .setImageResource(
+                R.id.iv_like,
                 if (item.collect) R.drawable.ic_like else R.drawable.ic_like_not
             )
             .addOnClickListener(R.id.iv_like)
@@ -63,5 +62,6 @@ class HomeListAdapter(private val context: Context?)
             tv_article_tag.visibility = View.GONE
         }
     }
+
 
 }

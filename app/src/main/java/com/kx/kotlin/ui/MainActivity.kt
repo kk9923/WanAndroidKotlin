@@ -42,7 +42,6 @@ import kotlinx.android.synthetic.main.toolbar.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.jetbrains.anko.doAsync
 
 
 class MainActivity : BaseActivity(), View.OnClickListener {
@@ -245,9 +244,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
                     showToast(getString(R.string.nav_setting))
                 }
                 R.id.nav_about_us -> {
-                    Intent(this@MainActivity, AboutUsActivity::class.java).run {
-                        startActivity(this)
-                    }
+//                    Intent(this@MainActivity, AboutUsActivity::class.java).run {
+//                        startActivity(this)
+//                    }
                     // goCommonActivity(Constant.Type.ABOUT_US_TYPE_KEY)
                 }
                 R.id.nav_logout -> {
@@ -425,15 +424,12 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         builder.setPositiveButton("确定") { _, _ ->
             RetrofitHelper.service.logout().compose(RxUtils.ioMain())
                 .subscribe({
-                    doAsync {
-                        // CookieManager().clearAllCookies()
-                        SPUtils.clearPreference()
-                        runOnUiThread {
-                            showToast(resources.getString(R.string.logout_success))
-                            username = tv_username.text.toString().trim()
-                            isLogin = false
-                            EventBus.getDefault().post(LoginEvent(false))
-                        }
+                    SPUtils.clearPreference()
+                    runOnUiThread {
+                        showToast(resources.getString(R.string.logout_success))
+                        username = tv_username.text.toString().trim()
+                        isLogin = false
+                        EventBus.getDefault().post(LoginEvent(false))
                     }
                 },{
 
@@ -535,9 +531,9 @@ class MainActivity : BaseActivity(), View.OnClickListener {
         super.onBackPressed()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState?.putInt(BOTTOM_INDEX, mIndex)
+        outState.putInt(BOTTOM_INDEX, mIndex)
     }
 
     override fun onDestroy() {

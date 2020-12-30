@@ -11,7 +11,7 @@ class KnowledgeTreeAdapter(private val context: Context?) :
     BaseQuickAdapter<KnowledgeTreeBody, BaseViewHolder>(
     R.layout.item_knowledge_tree_list) {
 
-    override fun convert(helper: BaseViewHolder?, item: KnowledgeTreeBody?) {
+    override fun convert(helper: BaseViewHolder, item: KnowledgeTreeBody?) {
         helper?.setText(R.id.title_first, item?.name)
         item?.children.let {
             helper?.setText(R.id.title_second,

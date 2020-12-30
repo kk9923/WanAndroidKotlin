@@ -8,10 +8,10 @@ import android.text.Html
 import com.kx.kotlin.bean.WXChapterBean
 import com.kx.kotlin.fragment.KnowledgeFragment
 
-class WeChatPagerAdapter(private val list: MutableList<WXChapterBean>, fm: androidx.fragment.app.FragmentManager?)
-    : androidx.fragment.app.FragmentStatePagerAdapter(fm) {
+class WeChatPagerAdapter(private val list: MutableList<WXChapterBean>, fm: FragmentManager) :
+    androidx.fragment.app.FragmentStatePagerAdapter(fm) {
 
-    private val fragments = mutableListOf<androidx.fragment.app.Fragment>()
+    private val fragments = mutableListOf<Fragment>()
 
     init {
         fragments.clear()
@@ -20,13 +20,13 @@ class WeChatPagerAdapter(private val list: MutableList<WXChapterBean>, fm: andro
         }
     }
 
-    override fun getItem(position: Int): androidx.fragment.app.Fragment = fragments[position]
+    override fun getItem(position: Int): Fragment = fragments[position]
 
     override fun getCount(): Int = list.size
 
     override fun getPageTitle(position: Int): CharSequence? = Html.fromHtml(list[position].name)
 
-    override fun getItemPosition(`object`: Any): Int = androidx.viewpager.widget.PagerAdapter.POSITION_NONE
+    override fun getItemPosition(`object`: Any): Int = PagerAdapter.POSITION_NONE
 
 
 }

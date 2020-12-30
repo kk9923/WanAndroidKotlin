@@ -10,7 +10,7 @@ import com.kx.kotlin.util.ImageLoader
 
 class ProjectAdapter(private val context: Context?) : BaseQuickAdapter<Article, BaseViewHolder>(R.layout.item_project_list) {
 
-    override fun convert(helper: BaseViewHolder?, item: Article?) {
+    override fun convert(helper: BaseViewHolder, item: Article?) {
         helper ?: return
         item ?: return
         helper.setText(R.id.item_project_list_title_tv, Html.fromHtml(item.title))

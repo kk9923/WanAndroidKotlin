@@ -7,7 +7,7 @@ import com.kx.kotlin.bean.UserScoreBean
 
 class ScoreAdapter : BaseQuickAdapter<UserScoreBean,BaseViewHolder>(R.layout.item_score_list){
 
-    override fun convert(helper: BaseViewHolder?, item: UserScoreBean?) {
+    override fun convert(helper: BaseViewHolder, item: UserScoreBean?) {
         helper ?: return
         item ?: return
         helper.setText(R.id.tv_reason, item.reason)

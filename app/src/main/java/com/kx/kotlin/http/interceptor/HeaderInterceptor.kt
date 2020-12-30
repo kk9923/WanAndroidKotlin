@@ -25,8 +25,8 @@ class HeaderInterceptor : Interceptor {
         // .header("token", token)
         // .method(request.method(), request.body())
 
-        val domain = request.url().host()
-        val url = request.url().toString()
+        val domain = request.url.host
+        val url = request.url.toString()
         if (domain.isNotEmpty() && (url.contains(HttpConstant.COLLECTIONS_WEBSITE)
                         || url.contains(HttpConstant.UNCOLLECTIONS_WEBSITE)
                         || url.contains(HttpConstant.ARTICLE_WEBSITE)

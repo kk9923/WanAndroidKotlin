@@ -12,7 +12,7 @@ import com.kx.kotlin.util.ImageLoader
 
 class MyCollectAdapter(private val context: Context?)
     : BaseQuickAdapter<CollectionArticle, BaseViewHolder>(R.layout.item_collect_list) {
-    override fun convert(helper: BaseViewHolder?, item: CollectionArticle?) {
+    override fun convert(helper: BaseViewHolder, item: CollectionArticle?) {
 
         helper ?: return
         item ?: return

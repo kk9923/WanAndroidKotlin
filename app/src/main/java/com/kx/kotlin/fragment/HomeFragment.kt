@@ -8,9 +8,12 @@ import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.kx.kotlin.R
+import com.kx.kotlin.R.id.recyclerView
+import com.kx.kotlin.R.id.refreshLayout
 import com.kx.kotlin.adapter.HomeListAdapter
 import com.kx.kotlin.base.BaseFragment
 import com.kx.kotlin.base.BaseObserver
+import com.kx.kotlin.base.BaseViewModelFragment
 import com.kx.kotlin.bean.ArticleResponseBody
 import com.kx.kotlin.bean.Banner
 import com.kx.kotlin.bean.HomeData
@@ -21,6 +24,7 @@ import com.kx.kotlin.theme.ThemeEvent
 import com.kx.kotlin.ui.ArticlesDetailActivity
 import com.kx.kotlin.util.RxUtil
 import com.kx.kotlin.util.RxUtils
+import com.kx.kotlin.viewmmodel.HomeFragmentViewModel
 import com.kx.kotlin.widget.GlideImageLoader
 import com.youth.banner.BannerConfig
 import io.reactivex.Observable
@@ -31,7 +35,7 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
 
-class HomeFragment : BaseFragment() {
+class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
 
 
     private var bannerView: com.youth.banner.Banner? = null
@@ -90,6 +94,7 @@ class HomeFragment : BaseFragment() {
     }
 
     fun onRefresh() {
+        var viewModel = getViewModel()
         pageNum = 0
         val banner = getBanner()
         val articles = getArticles(pageNum)
