@@ -1,12 +1,14 @@
 package com.kx.kotlin.fragment
 
+import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.recyclerview.widget.DividerItemDecoration
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.chad.library.adapter.base.BaseQuickAdapter.OnItemClickListener
 import com.kx.kotlin.R
 import com.kx.kotlin.R.id.recyclerView
 import com.kx.kotlin.R.id.refreshLayout
@@ -30,9 +32,15 @@ import com.youth.banner.BannerConfig
 import io.reactivex.Observable
 import io.reactivex.functions.BiFunction
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import kotlin.coroutines.CoroutineContext
 
 
 class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
@@ -46,6 +54,12 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
 
     companion object {
         fun getInstance(): HomeFragment = HomeFragment()
+    }
+
+    fun SharedPreferences.put(put : SharedPreferences.Editor.() -> Unit){
+        val editor = edit()
+        editor.put()
+        editor.apply()
     }
 
     override fun attachLayoutRes(): Int = R.layout.fragment_home
@@ -66,7 +80,12 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
                 .setIndicatorGravity(BannerConfig.RIGHT)
                 .setOnBannerListener {
                     val itemData = bannerUrls[it]
-                    ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.url)
+                    ArticlesDetailActivity.start(
+                        activity,
+                        itemData.id,
+                        itemData.title,
+                        itemData.url
+                    )
                 }
         }
 
@@ -84,6 +103,13 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
             }
         }
         refreshLayout.autoRefresh()
+        getViewModel().getBanners()
+        getViewModel().liveData.observe(this,
+            Observer<List<Banner>> {
+                it?.forEach {banner ->
+                    println("forEach -> "+banner.imagePath)
+                }
+            })
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -93,7 +119,7 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
         }
     }
 
-    fun onRefresh() {
+    private fun onRefresh() {
         var viewModel = getViewModel()
         pageNum = 0
         val banner = getBanner()
@@ -128,7 +154,7 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
             ))
     }
 
-    fun loadMore() {
+    private fun loadMore() {
         //  加载更多的时候禁调滑动
         //  直接设置接口数据时,当界面刷新完毕后,会在屏幕底部显示加载完成的文字
         recyclerView.stopScroll()
@@ -170,7 +196,7 @@ class HomeFragment : BaseViewModelFragment<HomeFragmentViewModel>() {
     }
 
     private val onItemClickListener =
-        OnItemClickListener { _, _, position ->
+        BaseQuickAdapter.OnItemClickListener { _, _, position ->
             val itemData = homeListAdapter.data[position]
             ArticlesDetailActivity.start(activity, itemData.id, itemData.title, itemData.link)
         }

@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder
 import com.kx.kotlin.R
 import com.kx.kotlin.bean.Article
 import com.kx.kotlin.theme.ResourceUtils
+import com.kx.kotlin.theme.ThemeManager.mContext
 import com.kx.kotlin.util.ImageLoader
 
 class HomeListAdapter(private val context: Context?) : BaseQuickAdapter<Article, BaseViewHolder>(R.layout.item_home_list) {

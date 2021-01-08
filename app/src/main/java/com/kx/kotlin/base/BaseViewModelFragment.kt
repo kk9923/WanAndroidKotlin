@@ -17,7 +17,7 @@ abstract class BaseViewModelFragment<VM : ViewModel> : BaseFragment() {
 
     private fun initViewModel() {
         val parameterizedType = javaClass.genericSuperclass as ParameterizedType
-        mViewModel = ViewModelProvider(this)[parameterizedType.actualTypeArguments[1] as Class<VM>]
+        mViewModel = ViewModelProvider(this)[parameterizedType.actualTypeArguments[0] as Class<VM>]
     }
 
     protected fun getViewModel(): VM {

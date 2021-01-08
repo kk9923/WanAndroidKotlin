@@ -102,37 +102,33 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlin_coroutines"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
    //   androidx
-    implementation rootProject.ext.androidx["androidx.appcompat"]
-    implementation rootProject.ext.androidx["androidx.constraintlayout"]
-    implementation rootProject.ext.androidx["androidx.material"]
-    implementation rootProject.ext.androidx["androidx.lifecycle-viewmodel"]
-    implementation rootProject.ext.androidx["androidx.lifecycle-livedata"]
-    implementation rootProject.ext.androidx["androidx.lifecycle-runtime"]
-    // banner
-    api rootProject.ext.dependencies["banner"]
-    // glide
-    api rootProject.ext.dependencies["glide"]
-    annotationProcessor rootProject.ext.dependencies["glide"]
-    // RxJava + RxAndroid
-    api rootProject.ext.dependencies["rxandroid"]
-    api rootProject.ext.dependencies["rxjava"]
-    api rootProject.ext.dependencies["retrofit"]
-    api rootProject.ext.dependencies["converter-gson"]
-    api rootProject.ext.dependencies["adapter-rxjava2"]
-    api rootProject.ext.dependencies["logging-interceptor"]
-    // EventBus
-    api rootProject.ext.dependencies["eventbus"]
-    // SmartRefreshLayout 刷新框架
-    api rootProject.ext.dependencies["refresh-core"]
-    api rootProject.ext.dependencies["refresh-header"]
-    api rootProject.ext.dependencies["refresh-footer"]
-    // anko
- //   implementation "org.jetbrains.anko:anko:0.10.8"
-
-    api rootProject.ext.dependencies["logger"]
-    // bugly
-    api rootProject.ext.dependencies["bugly"]
-    api rootProject.ext.dependencies["buglynativecrashreport"]
+    implementation rootProject.ext.androidxLibs
+    implementation rootProject.ext.commonLibs
+//    // banner
+//    api rootProject.ext.dependencies["banner"]
+//    // glide
+//    api rootProject.ext.dependencies["glide"]
+//    annotationProcessor rootProject.ext.dependencies["glide"]
+//    // RxJava + RxAndroid
+//    api rootProject.ext.dependencies["rxandroid"]
+//    api rootProject.ext.dependencies["rxjava"]
+//    api rootProject.ext.dependencies["retrofit"]
+//    api rootProject.ext.dependencies["converter-gson"]
+//    api rootProject.ext.dependencies["adapter-rxjava2"]
+//    api rootProject.ext.dependencies["logging-interceptor"]
+//    // EventBus
+//    api rootProject.ext.dependencies["eventbus"]
+//    // SmartRefreshLayout 刷新框架
+//    api rootProject.ext.dependencies["refresh-core"]
+//    api rootProject.ext.dependencies["refresh-header"]
+//    api rootProject.ext.dependencies["refresh-footer"]
+//    // anko
+// //   implementation "org.jetbrains.anko:anko:0.10.8"
+//
+//    api rootProject.ext.dependencies["logger"]
+//    // bugly
+//    api rootProject.ext.dependencies["bugly"]
+//    api rootProject.ext.dependencies["buglynativecrashreport"]
 
     implementation project(path: ':base_adapter')
 

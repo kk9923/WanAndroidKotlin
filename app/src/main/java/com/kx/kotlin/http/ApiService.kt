@@ -2,6 +2,7 @@ package com.kx.kotlin.http
 
 import com.kx.kotlin.bean.*
 import io.reactivex.Observable
+import retrofit2.Call
 import retrofit2.http.*
 
 interface ApiService {
@@ -11,6 +12,9 @@ interface ApiService {
      */
     @GET("banner/json")
     fun getBanners(): Observable<HttpResult<List<Banner>>>
+
+    @GET("banner/json")
+    suspend fun getBannersSuspend(): BaseResponse<List<Banner>>
 
     /**
      * 获取文章列表
